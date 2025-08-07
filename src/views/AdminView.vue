@@ -1,0 +1,1670 @@
+<template>
+  <div class="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50">
+    <!-- Admin Header -->
+    <header class="bg-white shadow-lg border-b-2 border-gradient-to-r from-pink-200 to-purple-200">
+      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-3 sm:py-4">
+          <div class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+            <div class="text-2xl sm:text-3xl">💄</div>
+            <div class="min-w-0">
+              <h1
+                class="text-lg sm:text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent truncate"
+              >
+                <span class="hidden sm:inline">Admin GlowGla</span>
+                <span class="sm:hidden">Admin GlowGla</span>
+              </h1>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+            <div class="hidden sm:flex items-center space-x-2">
+              <div
+                class="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center"
+              >
+                <span class="text-white text-xs sm:text-sm font-bold">{{
+                  authStore.user?.name?.charAt(0)
+                }}</span>
+              </div>
+              <span class="text-xs sm:text-sm text-gray-600 hidden lg:inline"
+                >Selamat Datang, {{ authStore.user?.name }}</span
+              >
+            </div>
+            <button
+              @click="logout"
+              class="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+            >
+              <span class="hidden sm:inline">Keluar</span>
+              <span class="sm:hidden">🚪</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Admin Navigation -->
+    <nav class="bg-gradient-to-r from-gray-800 to-gray-900 shadow-lg overflow-x-auto">
+      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div class="flex space-x-4 sm:space-x-8 min-w-max">
+          <button
+            v-for="tab in tabs"
+            :key="tab.id"
+            @click="activeTab = tab.id"
+            class="py-3 sm:py-4 px-3 sm:px-6 text-xs sm:text-sm font-medium transition-all duration-200 relative group whitespace-nowrap"
+            :class="activeTab === tab.id ? 'text-white' : 'text-gray-300 hover:text-white'"
+          >
+            <span class="flex items-center space-x-2">
+              <span>{{ tab.icon }}</span>
+              <span>{{ tab.name }}</span>
+            </span>
+            <div
+              v-if="activeTab === tab.id"
+              class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-400 to-purple-500 rounded-t-full"
+            ></div>
+            <div
+              v-else
+              class="absolute bottom-0 left-0 right-0 h-1 bg-transparent group-hover:bg-gradient-to-r group-hover:from-pink-400 group-hover:to-purple-500 rounded-t-full transition-all duration-200"
+            ></div>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Content Area -->
+    <main class="max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
+      <!-- Dashboard Tab -->
+      <div v-if="activeTab === 'dashboard'" class="space-y-4 sm:space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div
+            class="bg-gradient-to-r from-blue-500 to-cyan-600 overflow-hidden shadow-xl rounded-xl"
+          >
+            <div class="p-4 sm:p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-10 h-10 sm:w-12 sm:h-12 bg-white bg-opacity-30 rounded-full flex items-center justify-center"
+                  >
+                    <span class="text-white text-lg sm:text-2xl">👥</span>
+                  </div>
+                </div>
+                <div class="ml-3 sm:ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-xs sm:text-sm font-medium text-blue-100 truncate">
+                      Jumlah Member
+                    </dt>
+                    <dd class="text-lg sm:text-2xl font-bold text-white">
+                      {{ dashboardStats?.total_users || 0 }}
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-gradient-to-r from-purple-500 to-pink-600 overflow-hidden shadow-xl rounded-xl"
+          >
+            <div class="p-4 sm:p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-10 h-10 sm:w-12 sm:h-12 bg-white bg-opacity-30 rounded-full flex items-center justify-center"
+                  >
+                    <span class="text-white text-lg sm:text-2xl">💬</span>
+                  </div>
+                </div>
+                <div class="ml-3 sm:ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-xs sm:text-sm font-medium text-purple-100 truncate">
+                      Konsultasi
+                    </dt>
+                    <dd class="text-lg sm:text-2xl font-bold text-white">
+                      {{ dashboardStats?.total_conversations || 0 }}
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-gradient-to-r from-orange-500 to-red-600 overflow-hidden shadow-xl rounded-xl"
+          >
+            <div class="p-4 sm:p-5">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-10 h-10 sm:w-12 sm:h-12 bg-white bg-opacity-30 rounded-full flex items-center justify-center"
+                  >
+                    <span class="text-white text-lg sm:text-2xl">✨</span>
+                  </div>
+                </div>
+                <div class="ml-3 sm:ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-xs sm:text-sm font-medium text-orange-100 truncate">
+                      Tips Kecantikan Dibagikan
+                    </dt>
+                    <dd class="text-lg sm:text-2xl font-bold text-white">
+                      {{ dashboardStats?.total_messages || 0 }}
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity Chart -->
+        <div
+          class="bg-gradient-to-br from-white via-pink-50 to-purple-50 shadow-2xl rounded-2xl p-4 sm:p-6 border border-pink-100 relative overflow-hidden"
+        >
+          <!-- Decorative background -->
+          <div
+            class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-200/20 to-purple-300/20 rounded-full -translate-y-16 translate-x-16"
+          ></div>
+          <div
+            class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-purple-200/20 to-pink-300/20 rounded-full translate-y-12 -translate-x-12"
+          ></div>
+
+          <div class="relative z-10">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
+              <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-0 flex items-center">
+                <div
+                  class="bg-gradient-to-r from-pink-500 to-purple-600 p-2 rounded-xl mr-3 shadow-lg"
+                >
+                  <span class="text-white text-lg sm:text-xl">📈</span>
+                </div>
+                <div>
+                  <div
+                    class="bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
+                  >
+                    Aktivitas Konsultasi Kecantikan
+                  </div>
+                  <div class="text-xs sm:text-sm text-gray-500 font-normal">7 Hari Terakhir</div>
+                </div>
+              </h3>
+              <div class="flex items-center space-x-2">
+                <span
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-pink-100 to-purple-100 text-purple-800 border border-pink-200"
+                >
+                  <span
+                    class="w-2 h-2 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full mr-2"
+                  ></span>
+                  Tips Harian
+                </span>
+              </div>
+            </div>
+
+            <!-- Enhanced Activity Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 sm:gap-3">
+              <div
+                v-for="(day, index) in dashboardStats?.usage_by_date || []"
+                :key="day.date"
+                class="text-center group"
+              >
+                <div class="text-xs text-gray-500 mb-2 font-medium">
+                  {{ formatDateShort(day.date) }}
+                </div>
+                <div
+                  class="relative bg-gradient-to-t from-pink-100 via-purple-50 to-white rounded-xl p-3 sm:p-4 hover:from-pink-200 hover:via-purple-100 hover:to-pink-50 transition-all duration-300 shadow-md hover:shadow-xl transform hover:-translate-y-1 border border-pink-100 group-hover:border-pink-300"
+                  :style="{
+                    animationDelay: index * 100 + 'ms',
+                    minHeight: '80px',
+                  }"
+                >
+                  <!-- Activity indicator -->
+                  <div class="absolute top-2 right-2">
+                    <div
+                      v-if="day.messages > 0"
+                      class="w-2 h-2 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full animate-pulse"
+                    ></div>
+                  </div>
+
+                  <!-- Message count with animation -->
+                  <div
+                    class="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-900 to-pink-900 bg-clip-text text-transparent mb-1 transform group-hover:scale-110 transition-transform duration-200"
+                  >
+                    {{ day.messages }}
+                  </div>
+
+                  <!-- Label with icon -->
+                  <div class="flex items-center justify-center space-x-1">
+                    <span class="text-xs">💄</span>
+                    <span class="text-xs text-purple-600 font-medium">tips</span>
+                  </div>
+
+                  <!-- Progress bar -->
+                  <div class="mt-2 w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                    <div
+                      class="bg-gradient-to-r from-pink-400 to-purple-500 h-1.5 rounded-full transition-all duration-700"
+                      :style="{
+                        width:
+                          day.messages > 0
+                            ? Math.min(
+                                (day.messages /
+                                  Math.max(
+                                    ...(dashboardStats?.usage_by_date?.map(
+                                      (d: any) => d.messages,
+                                    ) || [1]),
+                                  )) *
+                                  100,
+                                100,
+                              ) + '%'
+                            : '0%',
+                      }"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="mt-6 pt-4 border-t border-pink-100">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                <div class="bg-white/50 rounded-xl p-3 border border-pink-100">
+                  <div class="text-lg font-bold text-purple-900">
+                    {{
+                      (dashboardStats?.usage_by_date || []).reduce(
+                        (sum: number, day: any) => sum + day.messages,
+                        0,
+                      )
+                    }}
+                  </div>
+                  <div class="text-xs text-gray-600">Total Tips</div>
+                </div>
+                <div class="bg-white/50 rounded-xl p-3 border border-pink-100">
+                  <div class="text-lg font-bold text-purple-900">
+                    {{
+                      Math.round(
+                        (dashboardStats?.usage_by_date || []).reduce(
+                          (sum: number, day: any) => sum + day.messages,
+                          0,
+                        ) / 7,
+                      )
+                    }}
+                  </div>
+                  <div class="text-xs text-gray-600">Rata-rata/Hari</div>
+                </div>
+                <div class="bg-white/50 rounded-xl p-3 border border-pink-100">
+                  <div class="text-lg font-bold text-purple-900">
+                    {{
+                      Math.max(
+                        ...(dashboardStats?.usage_by_date?.map((d: any) => d.messages) || [0]),
+                      )
+                    }}
+                  </div>
+                  <div class="text-xs text-gray-600">Puncak Hari</div>
+                </div>
+                <div class="bg-white/50 rounded-xl p-3 border border-pink-100">
+                  <div class="text-lg font-bold text-purple-900">
+                    {{
+                      (dashboardStats?.usage_by_date || []).filter((day: any) => day.messages > 0)
+                        .length
+                    }}
+                  </div>
+                  <div class="text-xs text-gray-600">Hari Aktif</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Tab -->
+      <div v-if="activeTab === 'users'" class="space-y-4 sm:space-y-6">
+        <!-- Enhanced Search Bar -->
+        <div
+          class="bg-gradient-to-r from-white via-pink-50 to-purple-50 shadow-xl rounded-2xl p-4 sm:p-6 border border-pink-100 relative overflow-hidden"
+        >
+          <!-- Decorative elements -->
+          <div
+            class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-pink-200/20 to-purple-300/20 rounded-full -translate-y-12 translate-x-12"
+          ></div>
+
+          <div class="relative z-10">
+            <div
+              class="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0"
+            >
+              <div class="flex items-center">
+                <div
+                  class="bg-gradient-to-r from-pink-500 to-purple-600 p-2 rounded-xl mr-3 shadow-lg"
+                >
+                  <span class="text-white text-lg">🔍</span>
+                </div>
+                <div>
+                  <h3
+                    class="text-lg font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
+                  >
+                    Pencarian Akun 
+                  </h3>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-4">
+                <div class="relative">
+                  <input
+                    v-model="userSearch"
+                    @input="searchUsers"
+                    type="text"
+                    placeholder="Cari nama atau email..."
+                    class="w-full sm:w-80 px-4 py-3 pl-10 border border-pink-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/80 backdrop-blur-sm shadow-sm"
+                  />
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span class="text-gray-400">🔍</span>
+                  </div>
+                  <div v-if="userSearch" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <button
+                      @click="((userSearch = ''), searchUsers())"
+                      class="text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <span class="text-lg">×</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="hidden sm:flex items-center space-x-2">
+                  <span
+                    class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-gradient-to-r from-pink-100 to-purple-100 text-purple-800 border border-pink-200"
+                  >
+                    <span
+                      class="w-2 h-2 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full mr-2 animate-pulse"
+                    ></span>
+                    {{ users.length }} Hasil
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Users Grid -->
+        <div
+          class="bg-gradient-to-br from-white via-pink-50 to-purple-50 shadow-2xl rounded-2xl p-4 sm:p-6 border border-pink-100 relative overflow-hidden"
+        >
+          <!-- Decorative background -->
+          <div
+            class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-pink-200/10 to-purple-300/10 rounded-full -translate-y-20 translate-x-20"
+          ></div>
+          <div
+            class="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-purple-200/10 to-pink-300/10 rounded-full translate-y-16 -translate-x-16"
+          ></div>
+
+          <div class="relative z-10">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center">
+                <div
+                  class="bg-gradient-to-r from-pink-500 to-purple-600 p-2 rounded-xl mr-3 shadow-lg"
+                >
+                  <span class="text-white text-lg">👥</span>
+                </div>
+                <div>
+                  <h3
+                    class="text-lg sm:text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
+                  >
+                    Komunitas GlowGla
+                  </h3>
+                </div>
+              </div>
+              <div class="hidden sm:flex items-center space-x-2">
+                <span
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-pink-100 to-purple-100 text-purple-800 border border-pink-200"
+                >
+                  <span
+                    class="w-2 h-2 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full mr-2"
+                  ></span>
+                  {{ users.length }} Anggota
+                </span>
+              </div>
+            </div>
+
+            <!-- Mobile Card View (Hidden on desktop) -->
+            <div class="block lg:hidden space-y-4">
+              <div
+                v-for="user in users"
+                :key="user.id"
+                class="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-pink-100 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              >
+                <div class="flex items-center space-x-3 mb-3">
+                  <div class="relative">
+                    <div
+                      class="h-12 w-12 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center shadow-lg"
+                    >
+                      <span class="text-white font-bold text-lg">{{ user.name.charAt(0) }}</span>
+                    </div>
+                    <div
+                      v-if="user.is_premium"
+                      class="absolute -top-1 -right-1 bg-yellow-400 rounded-full p-1"
+                    >
+                      <span class="text-xs">👑</span>
+                    </div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center space-x-2">
+                      <h4 class="text-sm font-bold text-gray-900 truncate">{{ user.name }}</h4>
+                      <span
+                        class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                        :class="
+                          user.is_premium
+                            ? 'bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border border-yellow-300'
+                            : 'bg-gray-100 text-gray-800 border border-gray-200'
+                        "
+                      >
+                        {{ user.is_premium ? '👑 Premium' : '💄 Free' }}
+                      </span>
+                    </div>
+                    <p class="text-xs text-gray-500 truncate">{{ user.email }}</p>
+                  </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                  <div class="bg-pink-50 rounded-lg p-2 text-center">
+                    <div class="text-lg font-bold text-pink-600">
+                      {{ user.conversations_count || 0 }}
+                    </div>
+                    <div class="text-xs text-gray-600">Konsultasi</div>
+                  </div>
+                  <div class="bg-purple-50 rounded-lg p-2 text-center">
+                    <div class="text-lg font-bold text-purple-600">
+                      {{ user.messages_count || 0 }}
+                    </div>
+                    <div class="text-xs text-gray-600">Pesan</div>
+                  </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex flex-col space-y-2">
+                  <div class="flex space-x-2">
+                    <button
+                      @click="viewUserDetails(user)"
+                      class="flex-1 bg-gradient-to-r from-blue-500 to-cyan-600 text-white text-xs py-2 px-3 rounded-lg font-medium hover:from-blue-600 hover:to-cyan-700 transition-all duration-200 shadow-sm"
+                    >
+                      Lihat Detail
+                    </button>
+                    <button
+                      @click="toggleUserPremium(user)"
+                      class="flex-1 text-xs py-2 px-3 rounded-lg font-medium transition-all duration-200 shadow-sm"
+                      :class="
+                        user.is_premium
+                          ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white hover:from-orange-600 hover:to-red-700'
+                          : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700'
+                      "
+                    >
+                      {{ user.is_premium ? 'Hapus Premium' : 'Buat Premium' }}
+                    </button>
+                  </div>
+                  <button
+                    @click="deleteUser(user)"
+                    class="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white text-xs py-2 px-3 rounded-lg font-medium hover:from-red-600 hover:to-pink-700 transition-all duration-200 shadow-sm"
+                  >
+                    Hapus Pengguna
+                  </button>
+                </div>
+
+                <!-- Join date -->
+                <div class="mt-3 pt-3 border-t border-pink-100">
+                  <div class="text-xs text-gray-500 text-center">
+                    Bergabung {{ formatDate(user.created_at) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Desktop Table View (Hidden on mobile) -->
+            <div class="hidden lg:block overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="min-w-full">
+                  <thead>
+                    <tr
+                      class="bg-gradient-to-r from-pink-100 to-purple-100 border-b border-pink-200"
+                    >
+                      <th
+                        class="px-6 py-4 text-left text-xs font-bold text-purple-900 uppercase tracking-wider rounded-tl-xl"
+                      >
+                        <div class="flex items-center space-x-2">
+                          <span>👤</span>
+                          <span>Beauty Enthusiast</span>
+                        </div>
+                      </th>
+                      <th
+                        class="px-6 py-4 text-left text-xs font-bold text-purple-900 uppercase tracking-wider"
+                      >
+                        <div class="flex items-center space-x-2">
+                          <span>⭐</span>
+                          <span>Status</span>
+                        </div>
+                      </th>
+                      <th
+                        class="px-6 py-4 text-left text-xs font-bold text-purple-900 uppercase tracking-wider"
+                      >
+                        <div class="flex items-center space-x-2">
+                          <span>📊</span>
+                          <span>Aktivitas</span>
+                        </div>
+                      </th>
+                      <th
+                        class="px-6 py-4 text-left text-xs font-bold text-purple-900 uppercase tracking-wider"
+                      >
+                        <div class="flex items-center space-x-2">
+                          <span>📅</span>
+                          <span>Bergabung</span>
+                        </div>
+                      </th>
+                      <th
+                        class="px-6 py-4 text-left text-xs font-bold text-purple-900 uppercase tracking-wider rounded-tr-xl"
+                      >
+                        <div class="flex items-center space-x-2">
+                          <span>⚙️</span>
+                          <span>Aksi</span>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white/50 backdrop-blur-sm">
+                    <tr
+                      v-for="(user, index) in users"
+                      :key="user.id"
+                      class="border-b border-pink-100 hover:bg-gradient-to-r hover:from-pink-50 hover:to-purple-50 transition-all duration-200 group"
+                      :class="index === users.length - 1 ? 'border-b-0' : ''"
+                    >
+                      <td class="px-6 py-4">
+                        <div class="flex items-center">
+                          <div class="flex-shrink-0 h-12 w-12 relative">
+                            <div
+                              class="h-12 w-12 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-200"
+                            >
+                              <span class="text-white font-bold text-lg">{{
+                                user.name.charAt(0)
+                              }}</span>
+                            </div>
+                            <div
+                              v-if="user.is_premium"
+                              class="absolute -top-1 -right-1 bg-yellow-400 rounded-full p-1 shadow-md"
+                            >
+                              <span class="text-xs">👑</span>
+                            </div>
+                          </div>
+                          <div class="ml-4">
+                            <div
+                              class="text-sm font-bold text-gray-900 group-hover:text-purple-900 transition-colors"
+                            >
+                              {{ user.name }}
+                            </div>
+                            <div class="text-sm text-gray-500">{{ user.email }}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4">
+                        <span
+                          class="inline-flex items-center px-3 py-1.5 text-xs font-bold rounded-full shadow-sm"
+                          :class="
+                            user.is_premium
+                              ? 'bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border border-yellow-300'
+                              : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300'
+                          "
+                        >
+                          <span class="mr-1">{{ user.is_premium ? '👑' : '💄' }}</span>
+                          {{ user.is_premium ? 'Premium' : 'Free' }}
+                        </span>
+                      </td>
+                      <td class="px-6 py-4">
+                        <div class="space-y-1">
+                          <div class="flex items-center space-x-2">
+                            <span class="text-xs">💬</span>
+                            <span class="text-sm font-medium text-gray-900"
+                              >{{ user.conversations_count || 0 }} konsultasi</span
+                            >
+                          </div>
+                          <div class="flex items-center space-x-2">
+                            <span class="text-xs">💌</span>
+                            <span class="text-sm text-gray-600"
+                              >{{ user.messages_count || 0 }} pesan</span
+                            >
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4">
+                        <div class="text-sm text-gray-600 font-medium">
+                          {{ formatDate(user.created_at) }}
+                        </div>
+                      </td>
+                      <td class="px-6 py-4">
+                        <div class="flex flex-col space-y-2">
+                          <div class="flex space-x-2">
+                            <button
+                              @click="viewUserDetails(user)"
+                              class="bg-gradient-to-r from-blue-500 to-cyan-600 text-white text-xs py-1.5 px-3 rounded-lg font-medium hover:from-blue-600 hover:to-cyan-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                            >
+                              Lihat
+                            </button>
+                            <button
+                              @click="toggleUserPremium(user)"
+                              class="text-xs py-1.5 px-3 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md"
+                              :class="
+                                user.is_premium
+                                  ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white hover:from-orange-600 hover:to-red-700'
+                                  : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700'
+                              "
+                            >
+                              {{ user.is_premium ? 'Hapus Premium' : 'Buat Premium' }}
+                            </button>
+                          </div>
+                          <button
+                            @click="deleteUser(user)"
+                            class="bg-gradient-to-r from-red-500 to-pink-600 text-white text-xs py-1.5 px-3 rounded-lg font-medium hover:from-red-600 hover:to-pink-700 transition-all duration-200 shadow-sm hover:shadow-md"
+                          >
+                            Hapus
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div v-if="usersPagination" class="flex justify-between items-center">
+          <div class="text-sm text-gray-700">
+            Showing {{ usersPagination.from }} to {{ usersPagination.to }} of
+            {{ usersPagination.total }} users
+          </div>
+          <div class="flex space-x-2">
+            <button
+              v-for="page in paginationPages"
+              :key="page"
+              @click="loadUsers(page)"
+              class="px-3 py-1 border rounded"
+              :class="
+                page === usersPagination.current_page
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white text-gray-700'
+              "
+            >
+              {{ page }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Stats Tab -->
+      <div v-if="activeTab === 'chat-stats'" class="space-y-4 sm:space-y-6">
+        <!-- Enhanced Stats Overview Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div
+            class="bg-gradient-to-br from-pink-500 via-pink-600 to-purple-600 overflow-hidden shadow-2xl rounded-2xl border border-pink-200 relative group hover:scale-105 transition-all duration-300"
+          >
+            <!-- Decorative elements -->
+            <div
+              class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"
+            ></div>
+            <div
+              class="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-8 -translate-x-8"
+            ></div>
+
+            <div class="p-4 sm:p-5 relative z-10">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+                  >
+                    <span class="text-white text-xl">💬</span>
+                  </div>
+                </div>
+                <div class="ml-4 w-0 flex-1">
+                  <dl>
+                    <dt class="text-xs sm:text-sm font-medium text-pink-100 truncate">
+                      Total Konsultasi (30h)
+                    </dt>
+                    <dd
+                      class="text-xl sm:text-2xl font-bold text-white group-hover:scale-110 transition-transform duration-200"
+                    >
+                      {{ chatStats?.total_messages_period || 0 }}
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="mt-3 pt-3 border-t border-white/20">
+                <div class="flex items-center text-pink-100 text-xs">
+                  <span class="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
+                  Tips kecantikan dibagikan
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-600 overflow-hidden shadow-2xl rounded-2xl border border-blue-200 relative group hover:scale-105 transition-all duration-300"
+          >
+            <!-- Decorative elements -->
+            <div
+              class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"
+            ></div>
+            <div
+              class="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-8 -translate-x-8"
+            ></div>
+
+            <div class="p-4 sm:p-5 relative z-10">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+                  >
+                    <span class="text-white text-xl">🗨️</span>
+                  </div>
+                </div>
+                <div class="ml-4 w-0 flex-1">
+                  <dl>
+                    <dt class="text-xs sm:text-sm font-medium text-blue-100 truncate">
+                      Percakapan (30h)
+                    </dt>
+                    <dd
+                      class="text-xl sm:text-2xl font-bold text-white group-hover:scale-110 transition-transform duration-200"
+                    >
+                      {{ chatStats?.total_conversations_period || 0 }}
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="mt-3 pt-3 border-t border-white/20">
+                <div class="flex items-center text-blue-100 text-xs">
+                  <span class="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
+                  Sesi konsultasi aktif
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 overflow-hidden shadow-2xl rounded-2xl border border-green-200 relative group hover:scale-105 transition-all duration-300"
+          >
+            <!-- Decorative elements -->
+            <div
+              class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"
+            ></div>
+            <div
+              class="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-8 -translate-x-8"
+            ></div>
+
+            <div class="p-4 sm:p-5 relative z-10">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+                  >
+                    <span class="text-white text-xl">📈</span>
+                  </div>
+                </div>
+                <div class="ml-4 w-0 flex-1">
+                  <dl>
+                    <dt class="text-xs sm:text-sm font-medium text-green-100 truncate">
+                      Rata-rata Harian
+                    </dt>
+                    <dd
+                      class="text-xl sm:text-2xl font-bold text-white group-hover:scale-110 transition-transform duration-200"
+                    >
+                      {{ getDailyAverage() }}
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="mt-3 pt-3 border-t border-white/20">
+                <div class="flex items-center text-green-100 text-xs">
+                  <span class="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
+                  Konsultasi per hari
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-gradient-to-br from-orange-500 via-orange-600 to-red-600 overflow-hidden shadow-2xl rounded-2xl border border-orange-200 relative group hover:scale-105 transition-all duration-300"
+          >
+            <!-- Decorative elements -->
+            <div
+              class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"
+            ></div>
+            <div
+              class="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full translate-y-8 -translate-x-8"
+            ></div>
+
+            <div class="p-4 sm:p-5 relative z-10">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+                  >
+                    <span class="text-white text-xl">👑</span>
+                  </div>
+                </div>
+                <div class="ml-4 w-0 flex-1">
+                  <dl>
+                    <dt class="text-xs sm:text-sm font-medium text-orange-100 truncate">
+                      Paling Aktif
+                    </dt>
+                    <dd
+                      class="text-xl sm:text-2xl font-bold text-white group-hover:scale-110 transition-transform duration-200"
+                    >
+                      {{ getMostActiveUser() }}
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+              <div class="mt-3 pt-3 border-t border-white/20">
+                <div class="flex items-center text-orange-100 text-xs">
+                  <span class="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
+                  Member teraktif bulan ini
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Activity Chart -->
+        <div
+          class="bg-gradient-to-br from-white via-pink-50 to-purple-50 shadow-2xl rounded-2xl p-4 sm:p-6 border border-pink-100 relative overflow-hidden"
+        >
+          <!-- Decorative background -->
+          <div
+            class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-pink-200/20 to-purple-300/20 rounded-full -translate-y-16 translate-x-16"
+          ></div>
+          <div
+            class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-purple-200/20 to-pink-300/20 rounded-full translate-y-12 -translate-x-12"
+          ></div>
+
+          <div class="relative z-10">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
+              <div class="flex items-center mb-4 sm:mb-0">
+                <div
+                  class="bg-gradient-to-r from-pink-500 to-purple-600 p-3 rounded-xl mr-4 shadow-lg"
+                >
+                  <span class="text-white text-xl">📊</span>
+                </div>
+                <div>
+                  <h3
+                    class="text-lg sm:text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
+                  >
+                    Aktivitas Konsultasi Kecantikan
+                  </h3>
+                  <p class="text-xs sm:text-sm text-gray-500">
+                    Analisis mendalam aktivitas platform
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span
+                  class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 border border-purple-200 shadow-sm"
+                >
+                  <span
+                    class="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full mr-2 animate-pulse"
+                  ></span>
+                  30 Hari Terakhir
+                </span>
+              </div>
+            </div>
+
+            <div
+              v-if="!chatStats?.messages_per_day || chatStats.messages_per_day.length === 0"
+              class="text-center py-16"
+            >
+              <div class="text-8xl mb-6 animate-bounce">💄</div>
+              <h4 class="text-xl font-bold text-gray-700 mb-2">Belum Ada Konsultasi Kecantikan</h4>
+              <p class="text-gray-500 text-base mb-4">
+                Mulai berbincang dengan AI kecantikan untuk melihat aktivitas di sini!
+              </p>
+              <div
+                class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-pink-100 to-purple-100 rounded-xl text-sm text-purple-700"
+              >
+                <span class="mr-2">✨</span>
+                Tips kecantikan menanti Anda
+              </div>
+            </div>
+
+            <div v-else class="space-y-4">
+              <div
+                v-for="(stat, index) in chatStats?.messages_per_day || []"
+                :key="stat.date"
+                class="group"
+              >
+                <div
+                  class="flex items-center space-x-4 p-3 rounded-xl hover:bg-white/60 transition-all duration-300 hover:shadow-md"
+                >
+                  <div class="flex items-center space-x-3">
+                    <div
+                      class="bg-gradient-to-r from-pink-400 to-purple-500 w-8 h-8 rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow duration-200"
+                    >
+                      <span class="text-white text-xs font-bold">{{ index + 1 }}</span>
+                    </div>
+                    <span
+                      class="text-sm font-bold text-gray-700 w-20 group-hover:text-purple-700 transition-colors"
+                    >
+                      {{ formatDateShort(stat.date) }}
+                    </span>
+                  </div>
+
+                  <div class="flex-1 relative">
+                    <div
+                      class="bg-gradient-to-r from-gray-200 to-gray-300 rounded-full h-6 relative overflow-hidden shadow-inner"
+                    >
+                      <div
+                        class="bg-gradient-to-r from-pink-400 via-purple-500 to-pink-600 h-6 rounded-full transition-all duration-700 flex items-center justify-end pr-3 shadow-sm"
+                        :style="{ width: getBarWidth(stat.count) + '%' }"
+                      >
+                        <span
+                          v-if="stat.count > 5"
+                          class="text-white text-xs font-bold drop-shadow-sm"
+                        >
+                          {{ stat.count }}
+                        </span>
+                      </div>
+                    </div>
+                    <!-- Activity level indicator -->
+                    <div class="absolute -top-1 -right-1">
+                      <div
+                        v-if="stat.count > 20"
+                        class="w-3 h-3 bg-green-400 rounded-full animate-pulse shadow-md"
+                      ></div>
+                      <div
+                        v-else-if="stat.count > 10"
+                        class="w-3 h-3 bg-yellow-400 rounded-full animate-pulse shadow-md"
+                      ></div>
+                      <div
+                        v-else-if="stat.count > 0"
+                        class="w-3 h-3 bg-blue-400 rounded-full animate-pulse shadow-md"
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div class="text-right min-w-[60px]">
+                    <div
+                      class="text-lg font-bold bg-gradient-to-r from-purple-900 to-pink-900 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-200"
+                    >
+                      {{ stat.count }}
+                    </div>
+                    <div class="text-xs text-gray-500 flex items-center justify-end">
+                      <span class="mr-1">💄</span>
+                      <span>tips</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Top Beauty Enthusiasts -->
+        <div
+          class="bg-gradient-to-br from-white via-purple-50 to-pink-50 shadow-2xl rounded-2xl p-4 sm:p-6 border border-purple-100 relative overflow-hidden"
+        >
+          <!-- Decorative background -->
+          <div
+            class="absolute top-0 left-0 w-40 h-40 bg-gradient-to-br from-purple-200/10 to-pink-300/10 rounded-full -translate-y-20 -translate-x-20"
+          ></div>
+          <div
+            class="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-pink-200/10 to-purple-300/10 rounded-full translate-y-16 translate-x-16"
+          ></div>
+
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center">
+                <div
+                  class="bg-gradient-to-r from-purple-500 to-pink-600 p-3 rounded-xl mr-4 shadow-lg"
+                >
+                  <span class="text-white text-xl">✨</span>
+                </div>
+                <div>
+                  <h3
+                    class="text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
+                  >
+                    Top Beauty Enthusiasts
+                  </h3>
+                  <p class="text-xs sm:text-sm text-gray-500">
+                    Pecinta kecantikan paling aktif bulan ini
+                  </p>
+                </div>
+              </div>
+              <div class="hidden sm:flex items-center space-x-2">
+                <span
+                  class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-gradient-to-r from-yellow-100 to-orange-100 text-orange-800 border border-yellow-200 shadow-sm"
+                >
+                  <span class="mr-2">🏆</span>
+                  Hall of Fame
+                </span>
+              </div>
+            </div>
+
+            <div
+              v-if="!chatStats?.top_active_users || chatStats.top_active_users.length === 0"
+              class="text-center py-12"
+            >
+              <div class="text-6xl mb-4 animate-pulse">💅</div>
+              <h4 class="text-lg font-bold text-gray-700 mb-2">
+                Belum Ada Beauty Enthusiast Aktif
+              </h4>
+              <p class="text-gray-500 text-sm">
+                Konsultasi kecantikan pertama akan muncul di sini!
+              </p>
+            </div>
+
+            <div v-else class="space-y-3">
+              <div
+                v-for="(user, index) in chatStats?.top_active_users || []"
+                :key="user.id"
+                class="group relative"
+              >
+                <!-- Rank highlight for top 3 -->
+                <div
+                  v-if="index < 3"
+                  class="absolute inset-0 rounded-xl opacity-10 transition-opacity duration-300 group-hover:opacity-20"
+                  :class="{
+                    'bg-gradient-to-r from-yellow-300 to-yellow-500': index === 0,
+                    'bg-gradient-to-r from-gray-300 to-gray-500': index === 1,
+                    'bg-gradient-to-r from-orange-300 to-orange-500': index === 2,
+                  }"
+                ></div>
+
+                <div
+                  class="relative flex items-center space-x-4 p-4 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-pink-50 hover:to-purple-50 hover:shadow-lg border border-transparent hover:border-pink-200"
+                >
+                  <!-- Enhanced Rank Badge -->
+                  <div class="flex-shrink-0 relative">
+                    <div
+                      class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white shadow-lg relative overflow-hidden group-hover:shadow-xl transition-shadow duration-300"
+                      :class="getRankBadgeColor(index)"
+                    >
+                      <!-- Shine effect for top 3 -->
+                      <div
+                        v-if="index < 3"
+                        class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"
+                      ></div>
+                      <span class="relative z-10">{{ index + 1 }}</span>
+                    </div>
+                    <!-- Crown for #1 -->
+                    <div v-if="index === 0" class="absolute -top-2 -right-1 text-lg animate-bounce">
+                      👑
+                    </div>
+                  </div>
+
+                  <!-- Enhanced User Avatar -->
+                  <div class="flex-shrink-0 h-14 w-14 relative">
+                    <div
+                      class="h-14 w-14 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 relative overflow-hidden"
+                    >
+                      <!-- Animated border for top users -->
+                      <div
+                        v-if="index < 3"
+                        class="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/40 to-transparent animate-spin"
+                      ></div>
+                      <span class="text-white font-bold text-lg relative z-10">{{
+                        user.name.charAt(0)
+                      }}</span>
+                    </div>
+                    <!-- Premium badge -->
+                    <div
+                      v-if="user.is_premium"
+                      class="absolute -bottom-1 -right-1 bg-yellow-400 rounded-full p-1 shadow-md"
+                    >
+                      <span class="text-xs">💎</span>
+                    </div>
+                  </div>
+
+                  <!-- Enhanced User Info -->
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center space-x-3 mb-1">
+                      <p
+                        class="text-sm font-bold text-gray-900 truncate group-hover:text-purple-900 transition-colors"
+                      >
+                        {{ user.name }}
+                      </p>
+                      <span
+                        v-if="user.is_premium"
+                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border border-yellow-300 shadow-sm"
+                      >
+                        <span class="mr-1">👑</span>
+                        Premium
+                      </span>
+                      <!-- Activity level badge -->
+                      <span
+                        v-if="user.messages_count > 50"
+                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300 shadow-sm"
+                      >
+                        🔥 Super Aktif
+                      </span>
+                    </div>
+                    <p class="text-sm text-gray-500 truncate">{{ user.email }}</p>
+                  </div>
+
+                  <!-- Enhanced Message Count -->
+                  <div class="flex-shrink-0 text-right">
+                    <div
+                      class="text-xl font-bold bg-gradient-to-r from-purple-900 to-pink-900 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-200"
+                    >
+                      {{ user.messages_count }}
+                    </div>
+                    <div class="text-xs text-gray-500 flex items-center justify-end">
+                      <span class="mr-1">💄</span>
+                      <span>konsultasi</span>
+                    </div>
+                  </div>
+
+                  <!-- Enhanced Trophy Icon for Top 3 -->
+                  <div v-if="index < 3" class="flex-shrink-0">
+                    <span class="text-3xl animate-pulse">{{ getTrophyIcon(index) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Fun Facts -->
+        <div
+          class="bg-gradient-to-br from-white via-pink-50 to-purple-50 shadow-2xl rounded-2xl p-4 sm:p-6 border border-pink-100 relative overflow-hidden"
+        >
+          <!-- Decorative background -->
+          <div
+            class="absolute top-0 right-0 w-36 h-36 bg-gradient-to-bl from-pink-200/10 to-purple-300/10 rounded-full -translate-y-18 translate-x-18"
+          ></div>
+          <div
+            class="absolute bottom-0 left-0 w-28 h-28 bg-gradient-to-tr from-purple-200/10 to-pink-300/10 rounded-full translate-y-14 -translate-x-14"
+          ></div>
+
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center">
+                <div
+                  class="bg-gradient-to-r from-pink-500 to-purple-600 p-3 rounded-xl mr-4 shadow-lg"
+                >
+                  <span class="text-white text-xl">🎉</span>
+                </div>
+                <div>
+                  <h3
+                    class="text-lg sm:text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
+                  >
+                    Beauty Stats Fun Facts
+                  </h3>
+                  <p class="text-xs sm:text-sm text-gray-500">
+                    Statistik menarik platform kecantikan
+                  </p>
+                </div>
+              </div>
+              <div class="hidden sm:flex items-center space-x-2">
+                <span
+                  class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 border border-purple-200 shadow-sm"
+                >
+                  <span class="mr-2">📊</span>
+                  Insights
+                </span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <!-- Total Beauty Questions -->
+              <div
+                class="group relative bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50 border border-purple-200 rounded-xl p-4 hover:shadow-xl transition-all duration-300 hover:border-purple-300 overflow-hidden"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-purple-100/0 via-pink-100/20 to-purple-100/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"
+                ></div>
+
+                <div class="relative z-10 text-center">
+                  <div
+                    class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+                  >
+                    <span class="text-2xl text-white">💄</span>
+                  </div>
+                  <div class="text-xs sm:text-sm text-gray-600 mb-2 font-medium">
+                    Total pertanyaan kecantikan
+                  </div>
+                  <div
+                    class="text-2xl sm:text-3xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-200"
+                  >
+                    {{ chatStats?.total_messages_period || 0 }}
+                  </div>
+                  <div class="text-xs text-gray-500 mt-1">konsultasi dijawab</div>
+                </div>
+              </div>
+
+              <!-- Most Active Day -->
+              <div
+                class="group relative bg-gradient-to-br from-pink-50 via-purple-50 to-pink-50 border border-pink-200 rounded-xl p-4 hover:shadow-xl transition-all duration-300 hover:border-pink-300 overflow-hidden"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-pink-100/0 via-purple-100/20 to-pink-100/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"
+                ></div>
+
+                <div class="relative z-10 text-center">
+                  <div
+                    class="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+                  >
+                    <span class="text-2xl text-white">🌟</span>
+                  </div>
+                  <div class="text-xs sm:text-sm text-gray-600 mb-2 font-medium">
+                    Hari paling aktif
+                  </div>
+                  <div
+                    class="text-lg sm:text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-200"
+                  >
+                    {{ getMostActiveDay() }}
+                  </div>
+                  <div class="text-xs text-gray-500 mt-1">aktivitas tertinggi</div>
+                </div>
+              </div>
+
+              <!-- Beauty Enthusiasts -->
+              <div
+                class="group relative bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-50 border border-yellow-200 rounded-xl p-4 hover:shadow-xl transition-all duration-300 hover:border-yellow-300 overflow-hidden sm:col-span-2 lg:col-span-1"
+              >
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-yellow-100/0 via-orange-100/20 to-yellow-100/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"
+                ></div>
+
+                <div class="relative z-10 text-center">
+                  <div
+                    class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+                  >
+                    <span class="text-2xl text-white">👥</span>
+                  </div>
+                  <div class="text-xs sm:text-sm text-gray-600 mb-2 font-medium">
+                    Beauty enthusiasts
+                  </div>
+                  <div
+                    class="text-2xl sm:text-3xl font-black bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-200"
+                  >
+                    {{ (chatStats?.top_active_users || []).length }}
+                  </div>
+                  <div class="text-xs text-gray-500 mt-1">pengguna aktif</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Insights -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+              <!-- Peak Activity Time -->
+              <div
+                class="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-4 hover:shadow-lg transition-all duration-300 group"
+              >
+                <div class="flex items-center space-x-3">
+                  <div
+                    class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow"
+                  >
+                    <span class="text-xl text-white">⏰</span>
+                  </div>
+                  <div>
+                    <h5
+                      class="font-bold text-gray-800 text-sm group-hover:text-emerald-900 transition-colors"
+                    >
+                      Jam Tersibuk
+                    </h5>
+                    <p class="text-xs text-gray-600">{{ getPeakTimeMessage() }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Engagement Level -->
+              <div
+                class="bg-gradient-to-br from-rose-50 to-pink-50 border border-rose-200 rounded-xl p-4 hover:shadow-lg transition-all duration-300 group"
+              >
+                <div class="flex items-center space-x-3">
+                  <div
+                    class="w-12 h-12 bg-gradient-to-br from-rose-400 to-pink-500 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow"
+                  >
+                    <span class="text-xl text-white">📈</span>
+                  </div>
+                  <div>
+                    <h5
+                      class="font-bold text-gray-800 text-sm group-hover:text-rose-900 transition-colors"
+                    >
+                      Engagement
+                    </h5>
+                    <p class="text-xs text-gray-600">{{ getEngagementLevel() }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- User Details Modal -->
+    <div
+      v-if="selectedUser"
+      class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+    >
+      <div
+        class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white"
+      >
+        <div class="mt-3">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium text-gray-900">User Details: {{ selectedUser.name }}</h3>
+            <button @click="selectedUser = null" class="text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Name</label>
+                <p class="text-sm text-gray-900">{{ selectedUser.name }}</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Email</label>
+                <p class="text-sm text-gray-900">{{ selectedUser.email }}</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Type</label>
+                <p class="text-sm text-gray-900">
+                  {{ selectedUser.is_premium ? 'Premium' : 'Free' }}
+                </p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Joined</label>
+                <p class="text-sm text-gray-900">{{ formatDate(selectedUser.created_at) }}</p>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="text-sm font-medium text-gray-700 mb-2">Conversations</h4>
+              <div class="max-h-40 overflow-y-auto space-y-2">
+                <div
+                  v-for="conversation in userConversations"
+                  :key="conversation.id"
+                  class="flex justify-between items-center p-2 bg-gray-50 rounded"
+                >
+                  <div>
+                    <p class="text-sm font-medium">{{ conversation.title }}</p>
+                    <p class="text-xs text-gray-500">{{ conversation.messages_count }} messages</p>
+                  </div>
+                  <button
+                    @click="deleteConversation(conversation.id)"
+                    class="text-red-600 hover:text-red-900 text-xs"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { api } from '@/services/api'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+// State
+const activeTab = ref('dashboard')
+const dashboardStats = ref<any>(null)
+const users = ref<any[]>([])
+const usersPagination = ref<any>(null)
+const userSearch = ref('')
+const chatStats = ref<any>(null)
+const selectedUser = ref<any>(null)
+const userConversations = ref<any[]>([])
+const loading = ref(false)
+
+// Tabs
+const tabs = [
+  { id: 'dashboard', name: 'Dashboard', icon: '📊' },
+  { id: 'users', name: 'Member', icon: '👥' },
+  { id: 'chat-stats', name: 'Analitik Kecantikan', icon: '✨' },
+]
+
+// Computed
+const paginationPages = computed(() => {
+  if (!usersPagination.value) return []
+  const pages = []
+  const total = usersPagination.value.last_page
+  const current = usersPagination.value.current_page
+
+  for (let i = Math.max(1, current - 2); i <= Math.min(total, current + 2); i++) {
+    pages.push(i)
+  }
+  return pages
+})
+
+// Methods
+const loadDashboardStats = async () => {
+  try {
+    const response = await api.get('/admin/dashboard/stats')
+    dashboardStats.value = response.data.stats
+  } catch (error) {
+    console.error('Failed to load dashboard stats:', error)
+  }
+}
+
+const loadUsers = async (page = 1) => {
+  try {
+    loading.value = true
+    const params = new URLSearchParams({
+      page: page.toString(),
+      per_page: '15',
+    })
+
+    if (userSearch.value) {
+      params.append('search', userSearch.value)
+    }
+
+    const response = await api.get(`/admin/users?${params}`)
+    users.value = response.data.users.data
+    usersPagination.value = response.data.users
+  } catch (error) {
+    console.error('Failed to load users:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+const searchUsers = () => {
+  loadUsers(1)
+}
+
+const loadChatStats = async () => {
+  try {
+    const response = await api.get('/admin/chat/stats?days=30')
+    chatStats.value = response.data.stats
+  } catch (error) {
+    console.error('Failed to load chat stats:', error)
+  }
+}
+
+const viewUserDetails = async (user: any) => {
+  try {
+    selectedUser.value = user
+    const response = await api.get(`/admin/users/${user.id}/conversations`)
+    userConversations.value = response.data.conversations.data
+  } catch (error) {
+    console.error('Failed to load user conversations:', error)
+  }
+}
+
+const toggleUserPremium = async (user: any) => {
+  try {
+    const response = await api.put(`/admin/users/${user.id}/premium`, {
+      is_premium: !user.is_premium,
+      subscription_expires_at: !user.is_premium ? null : null,
+    })
+
+    if (response.data.success) {
+      // Update the user in the list
+      const index = users.value.findIndex((u) => u.id === user.id)
+      if (index !== -1) {
+        users.value[index] = { ...users.value[index], ...response.data.user }
+      }
+    }
+  } catch (error) {
+    console.error('Failed to update user premium status:', error)
+  }
+}
+
+const deleteUser = async (user: any) => {
+  if (
+    !confirm(`Are you sure you want to delete user "${user.name}"? This action cannot be undone.`)
+  ) {
+    return
+  }
+
+  try {
+    const response = await api.delete(`/admin/users/${user.id}`)
+
+    if (response.data.success) {
+      users.value = users.value.filter((u) => u.id !== user.id)
+    }
+  } catch (error) {
+    console.error('Failed to delete user:', error)
+  }
+}
+
+const deleteConversation = async (conversationId: number) => {
+  if (!confirm('Are you sure you want to delete this conversation?')) {
+    return
+  }
+
+  try {
+    const response = await api.delete(`/admin/conversations/${conversationId}`)
+
+    if (response.data.success) {
+      userConversations.value = userConversations.value.filter((c) => c.id !== conversationId)
+    }
+  } catch (error) {
+    console.error('Failed to delete conversation:', error)
+  }
+}
+
+const logout = async () => {
+  await authStore.logout()
+  router.push('/auth')
+}
+
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString()
+}
+
+const formatDateShort = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
+const formatPeakHour = (hour: string) => {
+  if (!hour) return 'Belum tersedia'
+  const hourNum = parseInt(hour)
+  if (hourNum >= 0 && hourNum < 6) return `${hour}:00 (Dini hari)`
+  if (hourNum >= 6 && hourNum < 12) return `${hour}:00 (Pagi)`
+  if (hourNum >= 12 && hourNum < 18) return `${hour}:00 (Siang)`
+  if (hourNum >= 18 && hourNum < 24) return `${hour}:00 (Malam)`
+  return `${hour}:00`
+}
+
+const getDailyAverage = () => {
+  if (!chatStats.value?.messages_per_day || chatStats.value.messages_per_day.length === 0) {
+    return '0'
+  }
+  const total = chatStats.value.messages_per_day.reduce(
+    (sum: number, day: any) => sum + day.count,
+    0,
+  )
+  const average = Math.round(total / chatStats.value.messages_per_day.length)
+  return average.toString()
+}
+
+const getMostActiveUser = () => {
+  if (!chatStats.value?.top_active_users || chatStats.value.top_active_users.length === 0) {
+    return 'None'
+  }
+  return chatStats.value.top_active_users[0].messages_count.toString()
+}
+
+const getMostActiveDay = () => {
+  if (!chatStats.value?.messages_per_day || chatStats.value.messages_per_day.length === 0) {
+    return 'Belum ada data'
+  }
+
+  const mostActive = chatStats.value.messages_per_day.reduce((max: any, day: any) =>
+    day.count > max.count ? day : max,
+  )
+
+  return `${mostActive.count} konsultasi`
+}
+
+const getPeakTimeMessage = () => {
+  if (!chatStats.value?.peak_hour) {
+    return 'Data sedang dikumpulkan'
+  }
+  return `${formatPeakHour(chatStats.value.peak_hour)} adalah waktu tersibuk`
+}
+
+const getEngagementLevel = () => {
+  const totalMessages = chatStats.value?.total_messages_period || 0
+  if (totalMessages > 100) return 'Sangat tinggi! 🔥'
+  if (totalMessages > 50) return 'Baik sekali 👍'
+  if (totalMessages > 20) return 'Cukup aktif ✨'
+  return 'Mulai berkembang 🌱'
+}
+
+const getBarWidth = (count: number) => {
+  if (!chatStats.value?.messages_per_day || chatStats.value.messages_per_day.length === 0) {
+    return 0
+  }
+
+  const maxCount = Math.max(...chatStats.value.messages_per_day.map((day: any) => day.count))
+  return maxCount === 0 ? 0 : Math.max(5, (count / maxCount) * 100)
+}
+
+const getRankBadgeColor = (index: number) => {
+  switch (index) {
+    case 0:
+      return 'bg-gradient-to-r from-yellow-400 to-yellow-600' // Gold
+    case 1:
+      return 'bg-gradient-to-r from-gray-300 to-gray-500' // Silver
+    case 2:
+      return 'bg-gradient-to-r from-orange-400 to-orange-600' // Bronze
+    default:
+      return 'bg-gradient-to-r from-purple-400 to-purple-600'
+  }
+}
+
+const getTrophyIcon = (index: number) => {
+  switch (index) {
+    case 0:
+      return '🥇'
+    case 1:
+      return '🥈'
+    case 2:
+      return '🥉'
+    default:
+      return '⭐'
+  }
+}
+
+// Lifecycle
+onMounted(async () => {
+  // Check if user is admin
+  if (!authStore.user?.is_admin) {
+    router.push('/chat')
+    return
+  }
+
+  await loadDashboardStats()
+  await loadUsers()
+  await loadChatStats()
+})
+</script>
