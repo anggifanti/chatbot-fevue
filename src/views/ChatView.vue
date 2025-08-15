@@ -171,9 +171,6 @@
                 </span>
               </div>
               </div>
-                <div class="text-xl sm:text-2xl mb-2">💄</div>
-                <div class="text-xs sm:text-sm font-medium text-purple-800">Makeup Tutorial</div>
-                <div class="text-xs text-purple-600 mt-1">Panduan makeup step-by-step</div>
               <!--
               <div
                 class="p-3 sm:p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl text-center hover:scale-105 transition-transform duration-200 cursor-pointer sm:col-span-2 lg:col-span-1"
