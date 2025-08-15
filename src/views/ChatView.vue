@@ -170,30 +170,64 @@
                   tersisa
                 </span>
               </div>
+              </div>
+                <div class="text-xl sm:text-2xl mb-2">💄</div>
+                <div class="text-xs sm:text-sm font-medium text-purple-800">Makeup Tutorial</div>
+                <div class="text-xs text-purple-600 mt-1">Panduan makeup step-by-step</div>
+              <!--
+              <div
+                class="p-3 sm:p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl text-center hover:scale-105 transition-transform duration-200 cursor-pointer sm:col-span-2 lg:col-span-1"
+                @click="currentMessage = 'Produk skincare apa yang bagus untuk anti-aging?'"
+              >
+                <div class="text-xl sm:text-2xl mb-2">✨</div>
+                <div class="text-xs sm:text-sm font-medium text-blue-800">Produk Review</div>
+                <div class="text-xs text-blue-600 mt-1">Rekomendasi produk terbaik</div>
+              </div>
             </div>
-
-            <!-- End of welcome message examples -->
+              -->
           </div>
 
           <!-- Messages -->
-          <div v-for="message in chatStore.messages" :key="message.id"
-            :class="['flex', message.role === 'user' ? 'justify-end' : 'justify-start']">
-            <div :class="[
-              'max-w-[85%] sm:max-w-2xl px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-md transition-all duration-200 hover:shadow-lg',
-              message.role === 'user'
-                ? 'bg-gradient-to-r from-slate-500 to-purple-600 text-white ml-4 sm:ml-8'
-                : 'bg-white/90 backdrop-blur-sm text-gray-900 border border-pink-200/50 mr-4 sm:mr-8',
-            ]">
-              <div v-html="formatMessage(message.content)" :class="[
-                'formatted-message text-sm sm:text-base',
-                message.role === 'user' ? 'text-white' : 'text-gray-900',
-              ]"></div>
-              <div :class="[
-                'text-xs mt-1 sm:mt-2 flex items-center',
-                message.role === 'user' ? 'text-blue-100' : 'text-gray-500',
-              ]">
-                <span class="mr-1">⏰</span>
-                {{ formatTime(message.timestamp) }}
+          <div
+            v-for="message in chatStore.messages"
+            :key="message.id"
+            :class="['flex', message.sender === 'user' ? 'justify-end' : 'justify-start']"
+          >
+            <div
+              :class="[
+                'max-w-[85%] sm:max-w-2xl px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-md transition-all duration-200 hover:shadow-lg',
+                message.sender === 'user'
+                  ? 'bg-gradient-to-r from-slate-500 to-purple-600 text-white ml-4 sm:ml-8'
+                  : 'bg-white/90 backdrop-blur-sm text-gray-900 border border-pink-200/50 mr-4 sm:mr-8',
+              ]"
+            >
+              <div
+                v-html="formatMessage(message.content)"
+                :class="[
+                  'formatted-message text-sm sm:text-base',
+                  message.sender === 'user' ? 'text-white' : 'text-gray-900',
+                ]"
+              ></div>
+              <div
+                :class="[
+                  'text-xs mt-1 sm:mt-2 flex items-center justify-between',
+                  message.sender === 'user' ? 'text-blue-100' : 'text-gray-500',
+                ]"
+              >
+                <div class="flex items-center">
+                  <span class="mr-1">⏰</span>
+                  {{ formatTime(message.timestamp) }}
+                </div>
+                
+                <!-- Rating button for AI messages -->
+                <div v-if="message.sender === 'bot'" class="ml-2">
+                  <RatingButton
+                    variant="ghost"
+                    :session-id="getSessionId()"
+                    text="Rate"
+                    @rated="handleMessageRated"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -270,18 +304,39 @@
       </div>
 
       <!-- Prompt Limit Modal -->
-      <PromptLimitModal :show="showPromptLimitModal" @close="showPromptLimitModal = false"
-        @sign-up="$router.push('/auth')" />
+      <PromptLimitModal
+        :show="showPromptLimitModal"
+        @close="showPromptLimitModal = false"
+        @sign-up="$router.push('/auth')"
+      />
+      
+      <!-- Floating App Rating Button -->
+      <div class="fixed bottom-6 right-6 z-10">
+        <RatingButton
+          type="app"
+          variant="primary"
+          :session-id="getSessionId()"
+          text="Rate App"
+          @rated="handleAppRated"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick, onMounted, watch } from 'vue'
+import { 
+  ref, 
+  computed, 
+  nextTick, 
+  onMounted, 
+  watch 
+} from 'vue'
 import { useAuthStore } from '../stores/auth'
 import { useChatStore } from '../stores/chat'
 import { useRouter } from 'vue-router'
 import PromptLimitModal from '../components/PromptLimitModal.vue'
+import RatingButton from '../components/RatingButton.vue'
 import { api } from '../services/api'
 
 const authStore = useAuthStore()
@@ -481,6 +536,7 @@ const loadConversation = async (conversationId: number) => {
       chatStore.messages.push({
         id: msg.id.toString(),
         content: msg.content,
+        sender: msg.role === 'user' ? 'user' : 'bot',
         role: msg.role,
         timestamp: new Date(msg.created_at),
       })
@@ -502,7 +558,7 @@ const deleteConversation = async (conversationId: number) => {
     await api.delete(`/conversations/${conversationId}`)
 
     // Remove from local list
-    conversations.value = conversations.value.filter((c) => c.id !== conversationId)
+  conversations.value = conversations.value.filter((c: { id: number }) => c.id !== conversationId)
 
     // If this was the current conversation, start a new one
     if (chatStore.currentSession === conversationId.toString()) {
@@ -533,6 +589,20 @@ const formatConversationDate = (dateString: string) => {
   }
 }
 
+// Rating-related methods
+const getSessionId = () => {
+  if (authStore.isAuthenticated) return undefined
+  return chatStore.getGuestSessionId() || undefined
+}
+
+const handleMessageRated = () => {
+  // Optional: Could show a success message or update UI
+}
+
+const handleAppRated = () => {
+  // Optional: Could show a success message or update UI
+}
+
 onMounted(() => {
   // Focus on input when component mounts
   nextTick(() => {
@@ -551,7 +621,7 @@ onMounted(() => {
 // Watch for authentication changes
 watch(
   () => authStore.isAuthenticated,
-  (isAuthenticated) => {
+  (isAuthenticated: boolean) => {
     if (isAuthenticated) {
       loadConversations()
     } else {

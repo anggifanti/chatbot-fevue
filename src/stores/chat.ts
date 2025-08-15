@@ -8,7 +8,9 @@ export const useChatStore = defineStore('chat', () => {
   const messages = ref<Message[]>([])
   const currentSession = ref<string | null>(null)
   const isLoading = ref(false)
-  const guestPromptCount = ref(0)
+  
+  // Initialize guest count from localStorage to persist across refreshes
+  const guestPromptCount = ref(parseInt(localStorage.getItem('guestPromptCount') || '0'))
   const maxGuestPrompts = ref(2)
 
   const authStore = useAuthStore()
@@ -23,12 +25,25 @@ export const useChatStore = defineStore('chat', () => {
     return maxGuestPrompts.value - guestPromptCount.value
   })
 
+  // Generate or retrieve persistent guest session ID
+  const getGuestSessionId = () => {
+    if (authStore.isAuthenticated) return null
+    
+    let sessionId = localStorage.getItem('guestSessionId')
+    if (!sessionId) {
+      sessionId = 'guest_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
+      localStorage.setItem('guestSessionId', sessionId)
+    }
+    return sessionId
+  }
+
   const sendMessage = async (content: string) => {
     if (!canSendMessage.value) return false
 
     const userMessage: Message = {
       id: Date.now().toString(),
       content,
+      sender: 'user',
       role: 'user',
       timestamp: new Date(),
     }
@@ -51,13 +66,11 @@ export const useChatStore = defineStore('chat', () => {
 
         response = await api.post<ChatResponse>('/chat/send', payload)
       } else {
-        // Guest user - use guest chat endpoint
+        // Guest user - use guest chat endpoint with persistent session ID
+        const guestSessionId = getGuestSessionId()
         const payload: any = {
           message: content,
-        }
-
-        if (currentSession.value) {
-          payload.session_id = currentSession.value
+          session_id: guestSessionId,
         }
 
         response = await api.post<ChatResponse>('/chat/guest', payload)
@@ -77,6 +90,7 @@ export const useChatStore = defineStore('chat', () => {
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: response.data.response, // Backend returns 'response' field
+        sender: 'bot',
         role: 'assistant',
         timestamp: new Date(),
       }
@@ -89,9 +103,10 @@ export const useChatStore = defineStore('chat', () => {
         currentSession.value = response.data.session_id
       }
 
-      // Increment guest prompt count if not authenticated
+      // Increment and persist guest prompt count if not authenticated
       if (!authStore.isAuthenticated) {
         guestPromptCount.value++
+        localStorage.setItem('guestPromptCount', guestPromptCount.value.toString())
       }
 
       return true
@@ -112,7 +127,26 @@ export const useChatStore = defineStore('chat', () => {
 
   const resetGuestCount = () => {
     guestPromptCount.value = 0
+    localStorage.removeItem('guestPromptCount')
+    localStorage.removeItem('guestSessionId')
   }
+
+  // Initialize guest data on store creation (for page refresh)
+  const initGuestData = () => {
+    if (!authStore.isAuthenticated) {
+      // Ensure we have a guest session ID
+      getGuestSessionId()
+      
+      // Validate localStorage count doesn't exceed limit
+      if (guestPromptCount.value > maxGuestPrompts.value) {
+        guestPromptCount.value = maxGuestPrompts.value
+        localStorage.setItem('guestPromptCount', guestPromptCount.value.toString())
+      }
+    }
+  }
+
+  // Call init when store is created
+  initGuestData()
 
   return {
     messages,
@@ -125,5 +159,6 @@ export const useChatStore = defineStore('chat', () => {
     sendMessage,
     clearChat,
     resetGuestCount,
+    getGuestSessionId,
   }
 })

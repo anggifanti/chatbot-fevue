@@ -31,16 +31,21 @@
         <!-- Profile Picture Section -->
         <div class="bg-white/80 backdrop-blur-sm shadow-xl rounded-xl p-4 sm:p-6 border border-pink-100">
           <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-4 flex items-center">
-            <span class="text-lg sm:text-xl mr-2">📸</span>
-            Profil
+            <VIcon name="md-photo-camera" class="text-lg sm:text-xl mr-2 text-pink-500" />
+           Profil 
           </h2>
 
           <div class="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
             <div class="relative">
-              <img :src="user?.avatar_url || getDefaultAvatar()" :alt="user?.name"
-                class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-gradient-to-r from-pink-400 to-purple-500 shadow-lg" />
-              <button @click="triggerFileUpload"
-                class="absolute bottom-0 right-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full p-2 hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg">
+              <img
+                :src="user?.avatar || getDefaultAvatar()"
+                :alt="user?.name"
+                class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-gradient-to-r from-pink-400 to-purple-500 shadow-lg"
+              />
+              <button
+                @click="triggerFileUpload"
+                class="absolute bottom-0 right-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full p-2 hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg"
+              >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
                   </path>
@@ -109,7 +114,7 @@
         <!-- Change Password Section -->
         <div class="bg-white/80 backdrop-blur-sm shadow-xl rounded-xl p-4 sm:p-6 border border-purple-100">
           <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-            <span class="text-lg sm:text-xl mr-2">🔒</span>
+            <VIcon name="md-lock" class="text-lg sm:text-xl mr-2 text-purple-500" />
             Ubah Kata Sandi
           </h2>
 
@@ -290,7 +295,8 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { userService, type UserProfile } from '@/services/user'
+import { userService } from '@/services/user'
+import type { UserProfile } from '@/types'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -326,9 +332,9 @@ const deleteForm = ref({
 const getCurrentUser = async () => {
   try {
     const response = await userService.getCurrentUser()
-    user.value = response.user
-    profileForm.value.name = response.user.name
-    profileForm.value.email = response.user.email
+    user.value = response
+    profileForm.value.name = response.name
+    profileForm.value.email = response.email
   } catch (error: any) {
     console.error('Failed to fetch user:', error)
     showMessage('error', error.response?.data?.message || 'Failed to fetch user data')
@@ -358,10 +364,10 @@ const handleAvatarUpload = async (event: Event) => {
 
   try {
     const response = await userService.updateAvatar(file)
-    user.value = response.user
+    user.value = response
     authStore.user = {
-      ...response.user,
-      updated_at: response.user.updated_at ?? '',
+      ...response,
+      updated_at: response.updated_at ?? '',
     }
     showMessage('success', 'Avatar updated successfully!')
   } catch (error: any) {
@@ -376,10 +382,10 @@ const updateProfile = async () => {
     errors.value = {}
 
     const response = await userService.updateProfile(profileForm.value)
-    user.value = response.user
+    user.value = response
     authStore.user = {
-      ...response.user,
-      updated_at: response.user.updated_at ?? '',
+      ...response,
+      updated_at: response.updated_at ?? '',
     }
     showMessage('success', 'Profile updated successfully!')
   } catch (error: any) {
