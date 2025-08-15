@@ -10,10 +10,10 @@ class UserService {
    * Get current user profile
    */
   async getProfile(): Promise<User> {
-    const response = await apiService.get<User>('/user/profile')
+    const response = await apiService.get('/user')
     
-    if (response.data) {
-      return response.data
+    if (response.data && (response.data as any).user) {
+      return (response.data as any).user
     }
     
     throw new Error('Failed to get user profile')
@@ -23,10 +23,10 @@ class UserService {
    * Update user profile
    */
   async updateProfile(profileData: UpdateProfileData): Promise<User> {
-    const response = await apiService.put<User>('/user/profile', profileData)
+    const response = await apiService.put('/user/profile', profileData)
     
-    if (response.data) {
-      return response.data
+    if (response.data && (response.data as any).data) {
+      return (response.data as any).data
     }
     
     throw new Error('Failed to update profile')
@@ -45,8 +45,10 @@ class UserService {
   /**
    * Delete user account
    */
-  async deleteAccount(_deleteForm: { password: string; confirmation: string }): Promise<void> {
-    await apiService.delete('/user/account')
+  async deleteAccount(deleteForm: { password: string; confirmation: string }): Promise<void> {
+    await apiService.delete('/user/account', {
+      data: { password: deleteForm.password }
+    })
   }
 
   /**
@@ -101,10 +103,10 @@ class UserService {
     const formData = new FormData()
     formData.append('avatar', file)
     
-    const response = await apiService.post<User>('/user/avatar', formData)
+    const response = await apiService.post('/user/avatar', formData)
     
-    if (response.data) {
-      return response.data
+    if (response.data && (response.data as any).data) {
+      return (response.data as any).data
     }
     
     throw new Error('Failed to update avatar')

@@ -3,8 +3,8 @@
     <div class="max-w-md w-full space-y-8">
       <!-- Header -->
       <div class="text-center">
-        <div class="mx-auto h-20 w-20 bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg mb-6">
-          <VIcon name="md-lipstick" class="text-white text-3xl" />
+        <div class="mx-auto h-20 w-20 bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg mb-6 text-4xl">
+          💄
         </div>
         <h1 class="text-3xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
           GlowGla Beauty

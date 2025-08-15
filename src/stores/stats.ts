@@ -10,8 +10,8 @@ export const useStatsStore = defineStore('stats', () => {
   const fetchStats = async () => {
     try {
       isLoading.value = true
-      const response = await api.get<{ success: boolean; stats: UserStats }>('/user/stats')
-      stats.value = response.data.stats
+      const response = await api.get('/user/stats')
+      stats.value = response.data.data
     } catch (error) {
       console.error('Failed to fetch stats:', error)
     } finally {
