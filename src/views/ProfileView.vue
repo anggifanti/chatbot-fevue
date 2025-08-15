@@ -1,35 +1,19 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50">
     <!-- Header -->
-    <header
-      class="bg-white/80 backdrop-blur-sm shadow-lg border-b-2 border-gradient-to-r from-pink-200 to-purple-200"
-    >
+    <header class="bg-white/80 backdrop-blur-sm shadow-lg border-b-2 border-gradient-to-r from-pink-200 to-purple-200">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center py-3 sm:py-4">
           <div class="flex items-center space-x-2 sm:space-x-3">
-            <button
-              @click="$router.go(-1)"
-              class="text-gray-500 hover:text-gray-700 transition-colors p-1"
-            >
-              <svg
-                class="w-5 h-5 sm:w-6 sm:h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 19l-7-7 7-7"
-                ></path>
+            <button @click="$router.go(-1)" class="text-gray-500 hover:text-gray-700 transition-colors p-1">
+              <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
               </svg>
             </button>
             <div class="text-lg sm:text-2xl">⚙️</div>
             <div>
               <h1
-                class="text-lg sm:text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
-              >
+                class="text-lg sm:text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
                 Pengaturan Profil
               </h1>
               <p class="text-xs sm:text-sm text-gray-500 hidden sm:block">
@@ -45,34 +29,21 @@
     <main class="max-w-4xl mx-auto py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
       <div class="space-y-6 sm:space-y-8">
         <!-- Profile Picture Section -->
-        <div
-          class="bg-white/80 backdrop-blur-sm shadow-xl rounded-xl p-4 sm:p-6 border border-pink-100"
-        >
+        <div class="bg-white/80 backdrop-blur-sm shadow-xl rounded-xl p-4 sm:p-6 border border-pink-100">
           <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-4 flex items-center">
             <span class="text-lg sm:text-xl mr-2">📸</span>
-           Profil 
+            Profil
           </h2>
 
-          <div
-            class="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6"
-          >
+          <div class="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
             <div class="relative">
-              <img
-                :src="user?.avatar_url || getDefaultAvatar()"
-                :alt="user?.name"
-                class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-gradient-to-r from-pink-400 to-purple-500 shadow-lg"
-              />
-              <button
-                @click="triggerFileUpload"
-                class="absolute bottom-0 right-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full p-2 hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg"
-              >
+              <img :src="user?.avatar_url || getDefaultAvatar()" :alt="user?.name"
+                class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-gradient-to-r from-pink-400 to-purple-500 shadow-lg" />
+              <button @click="triggerFileUpload"
+                class="absolute bottom-0 right-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full p-2 hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  ></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                  </path>
                 </svg>
               </button>
             </div>
@@ -83,19 +54,11 @@
             </div>
           </div>
 
-          <input
-            ref="fileInput"
-            type="file"
-            accept="image/*"
-            @change="handleAvatarUpload"
-            class="hidden"
-          />
+          <input ref="fileInput" type="file" accept="image/*" @change="handleAvatarUpload" class="hidden" />
         </div>
 
         <!-- Profile Information Section -->
-        <div
-          class="bg-white/80 backdrop-blur-sm shadow-xl rounded-xl p-4 sm:p-6 border border-pink-100"
-        >
+        <div class="bg-white/80 backdrop-blur-sm shadow-xl rounded-xl p-4 sm:p-6 border border-pink-100">
           <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
             <span class="text-lg sm:text-xl mr-2">🦋</span>
             Informasi Profil
@@ -107,14 +70,9 @@
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                   Nama Lengkap
                 </label>
-                <input
-                  id="name"
-                  v-model="profileForm.name"
-                  type="text"
-                  required
+                <input id="name" v-model="profileForm.name" type="text" required
                   class="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
-                  placeholder="Masukkan nama lengkap Anda"
-                />
+                  placeholder="Masukkan nama lengkap Anda" />
                 <p v-if="errors.name" class="text-red-500 text-xs mt-1">{{ errors.name[0] }}</p>
               </div>
 
@@ -122,44 +80,23 @@
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                   Alamat Email
                 </label>
-                <input
-                  id="email"
-                  v-model="profileForm.email"
-                  type="email"
-                  required
+                <input id="email" v-model="profileForm.email" type="email" required
                   class="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
-                  placeholder="Masukkan alamat email Anda"
-                />
+                  placeholder="Masukkan alamat email Anda" />
                 <p v-if="errors.email" class="text-red-500 text-xs mt-1">{{ errors.email[0] }}</p>
               </div>
             </div>
 
             <div class="flex justify-end">
-              <button
-                type="submit"
-                :disabled="profileLoading"
-                class="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-medium py-2 sm:py-3 px-4 sm:px-6 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 text-sm sm:text-base"
-              >
+              <button type="submit" :disabled="profileLoading"
+                class="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-medium py-2 sm:py-3 px-4 sm:px-6 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 text-sm sm:text-base">
                 <span v-if="profileLoading" class="flex items-center">
-                  <svg
-                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      class="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      stroke-width="4"
-                    ></circle>
-                    <path
-                      class="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
+                  <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
                   </svg>
                   Memperbarui...
                 </span>
@@ -170,9 +107,7 @@
         </div>
 
         <!-- Change Password Section -->
-        <div
-          class="bg-white/80 backdrop-blur-sm shadow-xl rounded-xl p-4 sm:p-6 border border-purple-100"
-        >
+        <div class="bg-white/80 backdrop-blur-sm shadow-xl rounded-xl p-4 sm:p-6 border border-purple-100">
           <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
             <span class="text-lg sm:text-xl mr-2">🔒</span>
             Ubah Kata Sandi
@@ -183,14 +118,9 @@
               <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">
                 Kata Sandi Saat Ini
               </label>
-              <input
-                id="current_password"
-                v-model="passwordForm.current_password"
-                type="password"
-                required
+              <input id="current_password" v-model="passwordForm.current_password" type="password" required
                 class="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
-                placeholder="Masukkan kata sandi saat ini"
-              />
+                placeholder="Masukkan kata sandi saat ini" />
               <p v-if="errors.current_password" class="text-red-500 text-xs mt-1">
                 {{ errors.current_password[0] }}
               </p>
@@ -201,62 +131,33 @@
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                   Kata Sandi Baru
                 </label>
-                <input
-                  id="password"
-                  v-model="passwordForm.password"
-                  type="password"
-                  required
+                <input id="password" v-model="passwordForm.password" type="password" required
                   class="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
-                  placeholder="Masukkan kata sandi baru"
-                />
+                  placeholder="Masukkan kata sandi baru" />
                 <p v-if="errors.password" class="text-red-500 text-xs mt-1">
                   {{ errors.password[0] }}
                 </p>
               </div>
 
               <div>
-                <label
-                  for="password_confirmation"
-                  class="block text-sm font-medium text-gray-700 mb-2"
-                >
+                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
                   Konfirmasi Kata Sandi Baru
                 </label>
-                <input
-                  id="password_confirmation"
-                  v-model="passwordForm.password_confirmation"
-                  type="password"
-                  required
+                <input id="password_confirmation" v-model="passwordForm.password_confirmation" type="password" required
                   class="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
-                  placeholder="Konfirmasi kata sandi baru"
-                />
+                  placeholder="Konfirmasi kata sandi baru" />
               </div>
             </div>
 
             <div class="flex justify-end">
-              <button
-                type="submit"
-                :disabled="passwordLoading"
-                class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium py-2 sm:py-3 px-4 sm:px-6 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 text-sm sm:text-base"
-              >
+              <button type="submit" :disabled="passwordLoading"
+                class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium py-2 sm:py-3 px-4 sm:px-6 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 text-sm sm:text-base">
                 <span v-if="passwordLoading" class="flex items-center">
-                  <svg
-                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      class="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      stroke-width="4"
-                    ></circle>
-                    <path
-                      class="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
+                  <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
                   </svg>
                   Memperbarui...
                 </span>
@@ -281,10 +182,8 @@
               simpan.
             </p>
 
-            <button
-              @click="showDeleteModal = true"
-              class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-xl transition-all duration-200 text-sm sm:text-base"
-            >
+            <button @click="showDeleteModal = true"
+              class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-xl transition-all duration-200 text-sm sm:text-base">
               Hapus Akun
             </button>
           </div>
@@ -293,29 +192,15 @@
     </main>
 
     <!-- Delete Account Modal -->
-    <div
-      v-if="showDeleteModal"
-      class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 px-4"
-    >
+    <div v-if="showDeleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 px-4">
       <div
-        class="relative top-10 sm:top-20 mx-auto p-4 sm:p-5 border w-full max-w-lg shadow-lg rounded-xl bg-white/90 backdrop-blur-sm"
-      >
+        class="relative top-10 sm:top-20 mx-auto p-4 sm:p-5 border w-full max-w-lg shadow-lg rounded-xl bg-white/90 backdrop-blur-sm">
         <div class="mt-3">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-base sm:text-lg font-medium text-red-900">Hapus Akun</h3>
             <button @click="showDeleteModal = false" class="text-gray-400 hover:text-gray-600 p-1">
-              <svg
-                class="w-5 h-5 sm:w-6 sm:h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
+              <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
           </div>
@@ -330,62 +215,34 @@
               <label for="delete_password" class="block text-sm font-medium text-gray-700 mb-2">
                 Kata Sandi
               </label>
-              <input
-                id="delete_password"
-                v-model="deleteForm.password"
-                type="password"
-                required
+              <input id="delete_password" v-model="deleteForm.password" type="password" required
                 class="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm sm:text-base"
-                placeholder="Masukkan kata sandi Anda"
-              />
+                placeholder="Masukkan kata sandi Anda" />
             </div>
 
             <div>
               <label for="delete_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
                 Ketik "HAPUS_AKUN_SAYA" untuk konfirmasi
               </label>
-              <input
-                id="delete_confirmation"
-                v-model="deleteForm.confirmation"
-                type="text"
-                required
+              <input id="delete_confirmation" v-model="deleteForm.confirmation" type="text" required
                 class="w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm sm:text-base"
-                placeholder="HAPUS_AKUN_SAYA"
-              />
+                placeholder="HAPUS_AKUN_SAYA" />
             </div>
 
             <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4">
-              <button
-                @click="showDeleteModal = false"
-                class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-2 px-4 rounded-xl transition-all duration-200 text-sm sm:text-base order-2 sm:order-1"
-              >
+              <button @click="showDeleteModal = false"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-2 px-4 rounded-xl transition-all duration-200 text-sm sm:text-base order-2 sm:order-1">
                 Batal
               </button>
 
-              <button
-                @click="deleteAccount"
-                :disabled="deleteLoading || deleteForm.confirmation !== 'HAPUS_AKUN_SAYA'"
-                class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-xl transition-all duration-200 disabled:opacity-50 text-sm sm:text-base order-1 sm:order-2"
-              >
+              <button @click="deleteAccount" :disabled="deleteLoading || deleteForm.confirmation !== 'HAPUS_AKUN_SAYA'"
+                class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-xl transition-all duration-200 disabled:opacity-50 text-sm sm:text-base order-1 sm:order-2">
                 <span v-if="deleteLoading" class="flex items-center">
-                  <svg
-                    class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      class="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      stroke-width="4"
-                    ></circle>
-                    <path
-                      class="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
+                  <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
                   </svg>
                   Menghapus...
                 </span>
@@ -398,58 +255,28 @@
     </div>
 
     <!-- Success/Error Messages -->
-    <div
-      v-if="message"
-      class="fixed top-4 right-4 z-50 max-w-sm w-full bg-white border border-gray-200 rounded-lg shadow-lg"
-    >
+    <div v-if="message"
+      class="fixed top-4 right-4 z-50 max-w-sm w-full bg-white border border-gray-200 rounded-lg shadow-lg">
       <div class="p-4">
         <div class="flex items-start">
           <div class="flex-shrink-0">
-            <svg
-              v-if="message.type === 'success'"
-              class="h-5 w-5 text-green-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              ></path>
+            <svg v-if="message.type === 'success'" class="h-5 w-5 text-green-400" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
-            <svg
-              v-else
-              class="h-5 w-5 text-red-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
+            <svg v-else class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </div>
           <div class="ml-3 w-0 flex-1">
-            <p
-              :class="`text-sm font-medium ${message.type === 'success' ? 'text-green-800' : 'text-red-800'}`"
-            >
+            <p :class="`text-sm font-medium ${message.type === 'success' ? 'text-green-800' : 'text-red-800'}`">
               {{ message.text }}
             </p>
           </div>
           <div class="ml-4 flex-shrink-0 flex">
             <button @click="message = null" class="text-gray-400 hover:text-gray-600">
               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
           </div>

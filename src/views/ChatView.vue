@@ -1,48 +1,28 @@
 <template>
   <div class="flex h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
     <!-- Conversation Sidebar -->
-    <div
-      v-if="authStore.isAuthenticated && sidebarOpen"
+    <div v-if="authStore.isAuthenticated && sidebarOpen"
       class="w-full sm:w-80 bg-white/80 backdrop-blur-md border-r border-pink-200/50 flex flex-col absolute sm:relative top-0 left-0 h-full z-20 transform transition-all duration-300 shadow-xl"
-      :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'"
-    >
+      :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0'">
       <!-- Sidebar Header -->
-      <div
-        class="p-4 border-b border-pink-200/50 bg-gradient-to-r from-pink-100/50 to-purple-100/50"
-      >
+      <div class="p-4 border-b border-pink-200/50 bg-gradient-to-r from-pink-100/50 to-purple-100/50">
         <div class="flex justify-between items-center">
-          <h2
-            class="text-lg font-semibold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
-          >
+          <h2 class="text-lg font-semibold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
             💄 Percakapan Kecantikan
           </h2>
           <div class="flex items-center space-x-2">
-            <button
-              @click="startNewConversation"
+            <button @click="startNewConversation"
               class="p-2 text-pink-400 hover:text-pink-600 hover:bg-pink-100/50 rounded-lg transition-all duration-200 hover:scale-105"
-              title="Konsultasi Baru"
-            >
+              title="Konsultasi Baru">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 4v16m8-8H4"
-                ></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
               </svg>
             </button>
-            <button
-              @click="sidebarOpen = false"
+            <button @click="sidebarOpen = false"
               class="sm:hidden p-2 text-pink-400 hover:text-pink-600 hover:bg-pink-100/50 rounded-lg transition-all duration-200"
-              title="Tutup Sidebar"
-            >
+              title="Tutup Sidebar">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
           </div>
@@ -53,11 +33,8 @@
       <div class="flex-1 overflow-y-auto">
         <div v-if="conversationsLoading" class="p-4">
           <div class="animate-pulse space-y-3">
-            <div
-              v-for="i in 5"
-              :key="i"
-              class="h-16 bg-gradient-to-r from-pink-200/50 to-purple-200/50 rounded-lg"
-            ></div>
+            <div v-for="i in 5" :key="i" class="h-16 bg-gradient-to-r from-pink-200/50 to-purple-200/50 rounded-lg">
+            </div>
           </div>
         </div>
         <div v-else-if="conversations.length === 0" class="p-4 text-center">
@@ -66,27 +43,20 @@
           <div class="text-xs text-gray-400 mt-1">Mulai konsultasi kecantikan pertama Anda!</div>
         </div>
         <div v-else class="p-2 space-y-1">
-          <div
-            v-for="conversation in conversations"
-            :key="conversation.id"
-            @click="loadConversation(conversation.id)"
+          <div v-for="conversation in conversations" :key="conversation.id" @click="loadConversation(conversation.id)"
             :class="[
               'group p-3 rounded-lg cursor-pointer transition-all duration-200 hover:scale-[1.02]',
               chatStore.currentSession === conversation.id.toString()
                 ? 'bg-gradient-to-r from-pink-100 to-purple-100 border border-pink-300/50 shadow-md'
                 : 'hover:bg-gradient-to-r hover:from-pink-50 hover:to-purple-50 hover:shadow-sm',
-            ]"
-          >
+            ]">
             <div class="flex justify-between items-start">
               <div class="flex-1 min-w-0">
                 <h3 class="text-sm font-medium text-gray-900 truncate flex items-center">
                   <span class="text-pink-400 mr-2">💬</span>
                   {{ conversation.title }}
                 </h3>
-                <p
-                  v-if="conversation.messages && conversation.messages[0]"
-                  class="text-xs text-gray-500 mt-1 truncate"
-                >
+                <p v-if="conversation.messages && conversation.messages[0]" class="text-xs text-gray-500 mt-1 truncate">
                   {{ conversation.messages[0].content }}
                 </p>
                 <p class="text-xs text-pink-400 mt-1 flex items-center">
@@ -94,16 +64,12 @@
                   {{ formatConversationDate(conversation.updated_at) }}
                 </p>
               </div>
-              <button
-                @click.stop="deleteConversation(conversation.id)"
-                class="ml-2 p-1 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
-              >
+              <button @click.stop="deleteConversation(conversation.id)"
+                class="ml-2 p-1 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
+                  <path fill-rule="evenodd"
                     d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9zM4 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 012 0v4a1 1 0 11-2 0V9zm4 0a1 1 0 012 0v4a1 1 0 11-2 0V9z"
-                    clip-rule="evenodd"
-                  ></path>
+                    clip-rule="evenodd"></path>
                 </svg>
               </button>
             </div>
@@ -115,85 +81,58 @@
     <!-- Main Chat Area -->
     <div class="flex-1 flex flex-col">
       <!-- Header -->
-      <header
-        class="bg-white/90 backdrop-blur-md shadow-lg border-b border-pink-200/50 px-3 sm:px-6 py-3 sm:py-4"
-      >
+      <header class="bg-white/90 backdrop-blur-md shadow-lg border-b border-pink-200/50 px-3 sm:px-6 py-3 sm:py-4">
         <div class="flex justify-between items-center">
           <div class="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0">
-            <button
-              v-if="authStore.isAuthenticated"
-              @click="sidebarOpen = !sidebarOpen"
+            <button v-if="authStore.isAuthenticated" @click="sidebarOpen = !sidebarOpen"
               class="sm:hidden p-2 text-pink-400 hover:text-pink-600 hover:bg-pink-100/50 rounded-lg transition-all duration-200"
-              title="Toggle Conversations"
-            >
+              title="Toggle Conversations">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                ></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
               </svg>
             </button>
             <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
               <div
-                class="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-pink-400 via-purple-600 to-slate-400 rounded-full flex items-center justify-center flex-shrink-0"
-              >
+                class="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-pink-400 via-purple-600 to-slate-400 rounded-full flex items-center justify-center flex-shrink-0">
                 <span class="text-white text-sm sm:text-lg">✨</span>
               </div>
               <h1
-                class="text-lg sm:text-2xl font-bold bg-gradient-to-r from-pink-600 via-slate-400 to-blue-500 bg-clip-text text-transparent truncate"
-              >
+                class="text-lg sm:text-2xl font-bold bg-gradient-to-r from-pink-600 via-slate-400 to-blue-500 bg-clip-text text-transparent truncate">
                 <span class="hidden sm:inline">GlowGla Beauty</span>
               </h1>
             </div>
-            <div
-              v-if="!authStore.isAuthenticated"
-              class="hidden sm:flex px-3 py-1 bg-gradient-to-r from-pink-100 to-purple-100 rounded-full flex-shrink-0"
-            >
+            <div v-if="!authStore.isAuthenticated"
+              class="hidden sm:flex px-3 py-1 bg-gradient-to-r from-pink-100 to-purple-100 rounded-full flex-shrink-0">
               <span class="text-xs sm:text-sm font-medium text-pink-700">
                 💎 {{ chatStore.remainingPrompts }} konsultasi gratis tersisa
               </span>
             </div>
           </div>
           <div class="flex items-center space-x-1 sm:space-x-3 flex-shrink-0">
-            <button
-              v-if="authStore.isAuthenticated && authStore.user && authStore.user.is_admin"
+            <button v-if="authStore.isAuthenticated && authStore.user && authStore.user.is_admin"
               @click="$router.push('/admin')"
-              class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 hover:scale-105 shadow-md"
-            >
+              class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 hover:scale-105 shadow-md">
               <span class="hidden sm:inline">👑 Admin</span>
               <span class="sm:hidden">👑</span>
             </button>
-            <button
-              v-if="authStore.isAuthenticated"
-              @click="$router.push('/dashboard')"
-              class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white/80 backdrop-blur-sm border border-pink-200 rounded-lg hover:bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-200 hover:scale-105 shadow-sm"
-            >
+            <button v-if="authStore.isAuthenticated" @click="$router.push('/dashboard')"
+              class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white/80 backdrop-blur-sm border border-pink-200 rounded-lg hover:bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-200 hover:scale-105 shadow-sm">
               <span class="hidden sm:inline">📊 Dashboard</span>
               <span class="sm:hidden">📊</span>
             </button>
-            <button
-              v-if="authStore.isAuthenticated"
-              @click="router.push('/profile')"
-              class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white/80 backdrop-blur-sm border border-purple-200 rounded-lg hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 hover:scale-105 shadow-sm"
-            >
+            <button v-if="authStore.isAuthenticated" @click="router.push('/profile')"
+              class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white/80 backdrop-blur-sm border border-purple-200 rounded-lg hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200 hover:scale-105 shadow-sm">
               <span class="hidden sm:inline">👤 Profil</span>
               <span class="sm:hidden">👤</span>
             </button>
-            <button
-              v-if="authStore.isAuthenticated"
-              @click="handleLogout"
-              class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-red-400 to-pink-500 rounded-lg hover:from-red-500 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:scale-105 shadow-md"
-            >
+            <button v-if="authStore.isAuthenticated" @click="handleLogout"
+              class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-red-400 to-pink-500 rounded-lg hover:from-red-500 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:scale-105 shadow-md">
               <span class="hidden sm:inline">🚪 Keluar</span>
               <span class="sm:hidden">🚪</span>
             </button>
-            <button
-              v-else
-              @click="$router.push('/auth')"
-              class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:scale-105 shadow-md"
-            >
+            <button v-else @click="$router.push('/auth')"
+              class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:scale-105 shadow-md">
               <span class="hidden sm:inline">🔐 Masuk</span>
               <span class="sm:hidden">🔐</span>
             </button>
@@ -201,9 +140,7 @@
         </div>
         <!-- Mobile guest prompt counter -->
         <div v-if="!authStore.isAuthenticated" class="sm:hidden mt-2 text-center">
-          <div
-            class="inline-flex px-3 py-1 bg-gradient-to-r from-pink-100 to-purple-100 rounded-full"
-          >
+          <div class="inline-flex px-3 py-1 bg-gradient-to-r from-pink-100 to-purple-100 rounded-full">
             <span class="text-xs font-medium text-pink-700">
               💎 {{ chatStore.remainingPrompts }} konsultasi gratis tersisa
             </span>
@@ -218,68 +155,43 @@
           <div v-if="chatStore.messages.length === 0" class="text-center py-4 sm:py-8">
             <div class="mb-4 sm:mb-6">
               <div
-                class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gradient-to-br from-pink-600 via-slate-50 to-blue-500 rounded-full flex items-center justify-center mb-3 sm:mb-4 animate-pulse"
-              >
+                class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-gradient-to-br from-pink-600 via-slate-50 to-blue-500 rounded-full flex items-center justify-center mb-3 sm:mb-4 animate-pulse">
                 <span class="text-white text-2xl sm:text-3xl">💄</span>
               </div>
               <div
-                class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-pink-600 to-slate-300 bg-clip-text text-transparent mb-2 px-4"
-              >
+                class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-pink-600 to-slate-300 bg-clip-text text-transparent mb-2 px-4">
                 Selamat datang di GlowGla Beauty ✨
               </div>
-            
-              <div
-                v-if="!authStore.isAuthenticated"
-                class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-pink-100 to-purple-100 rounded-full mx-4"
-              >
+
+              <div v-if="!authStore.isAuthenticated"
+                class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-pink-100 to-purple-100 rounded-full mx-4">
                 <span class="text-xs sm:text-sm font-medium text-pink-700">
                   💎 Anda memiliki {{ chatStore.remainingPrompts }} konsultasi kecantikan gratis
                   tersisa
                 </span>
               </div>
             </div>
-                <div class="text-xl sm:text-2xl mb-2">💄</div>
-                <div class="text-xs sm:text-sm font-medium text-purple-800">Makeup Tutorial</div>
-                <div class="text-xs text-purple-600 mt-1">Panduan makeup step-by-step</div>
-              </div>
-              <div
-                class="p-3 sm:p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl text-center hover:scale-105 transition-transform duration-200 cursor-pointer sm:col-span-2 lg:col-span-1"
-                @click="currentMessage = 'Produk skincare apa yang bagus untuk anti-aging?'"
-              >
-                <div class="text-xl sm:text-2xl mb-2">✨</div>
-                <div class="text-xs sm:text-sm font-medium text-blue-800">Produk Review</div>
-                <div class="text-xs text-blue-600 mt-1">Rekomendasi produk terbaik</div>
-              </div>
-            </div> -->
+
+            <!-- End of welcome message examples -->
           </div>
 
           <!-- Messages -->
-          <div
-            v-for="message in chatStore.messages"
-            :key="message.id"
-            :class="['flex', message.role === 'user' ? 'justify-end' : 'justify-start']"
-          >
-            <div
-              :class="[
-                'max-w-[85%] sm:max-w-2xl px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-md transition-all duration-200 hover:shadow-lg',
-                message.role === 'user'
-                  ? 'bg-gradient-to-r from-slate-500 to-purple-600 text-white ml-4 sm:ml-8'
-                  : 'bg-white/90 backdrop-blur-sm text-gray-900 border border-pink-200/50 mr-4 sm:mr-8',
-              ]"
-            >
-              <div
-                v-html="formatMessage(message.content)"
-                :class="[
-                  'formatted-message text-sm sm:text-base',
-                  message.role === 'user' ? 'text-white' : 'text-gray-900',
-                ]"
-              ></div>
-              <div
-                :class="[
-                  'text-xs mt-1 sm:mt-2 flex items-center',
-                  message.role === 'user' ? 'text-blue-100' : 'text-gray-500',
-                ]"
-              >
+          <div v-for="message in chatStore.messages" :key="message.id"
+            :class="['flex', message.role === 'user' ? 'justify-end' : 'justify-start']">
+            <div :class="[
+              'max-w-[85%] sm:max-w-2xl px-3 sm:px-4 py-2 sm:py-3 rounded-2xl shadow-md transition-all duration-200 hover:shadow-lg',
+              message.role === 'user'
+                ? 'bg-gradient-to-r from-slate-500 to-purple-600 text-white ml-4 sm:ml-8'
+                : 'bg-white/90 backdrop-blur-sm text-gray-900 border border-pink-200/50 mr-4 sm:mr-8',
+            ]">
+              <div v-html="formatMessage(message.content)" :class="[
+                'formatted-message text-sm sm:text-base',
+                message.role === 'user' ? 'text-white' : 'text-gray-900',
+              ]"></div>
+              <div :class="[
+                'text-xs mt-1 sm:mt-2 flex items-center',
+                message.role === 'user' ? 'text-blue-100' : 'text-gray-500',
+              ]">
                 <span class="mr-1">⏰</span>
                 {{ formatTime(message.timestamp) }}
               </div>
@@ -289,25 +201,17 @@
           <!-- Loading Message -->
           <div v-if="chatStore.isLoading" class="flex justify-start">
             <div
-              class="max-w-[85%] sm:max-w-2xl px-3 sm:px-4 py-2 sm:py-3 bg-white/90 backdrop-blur-sm border border-pink-200/50 rounded-2xl shadow-md mr-4 sm:mr-8"
-            >
+              class="max-w-[85%] sm:max-w-2xl px-3 sm:px-4 py-2 sm:py-3 bg-white/90 backdrop-blur-sm border border-pink-200/50 rounded-2xl shadow-md mr-4 sm:mr-8">
               <div class="flex items-center space-x-2 sm:space-x-3">
                 <div class="flex space-x-1">
-                  <div
-                    class="w-2 h-2 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full animate-bounce"
-                  ></div>
-                  <div
-                    class="w-2 h-2 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full animate-bounce"
-                    style="animation-delay: 0.1s"
-                  ></div>
-                  <div
-                    class="w-2 h-2 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full animate-bounce"
-                    style="animation-delay: 0.2s"
-                  ></div>
+                  <div class="w-2 h-2 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full animate-bounce"></div>
+                  <div class="w-2 h-2 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full animate-bounce"
+                    style="animation-delay: 0.1s"></div>
+                  <div class="w-2 h-2 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full animate-bounce"
+                    style="animation-delay: 0.2s"></div>
                 </div>
-                <span class="text-gray-600 font-medium text-sm sm:text-base"
-                  >Sebentar ya cantik, GlowGla lagi bongkar makeup kit rahasia dulu 👜</span
-                >
+                <span class="text-gray-600 font-medium text-sm sm:text-base">Sebentar ya cantik, GlowGla lagi bongkar
+                  makeup kit rahasia dulu 👜</span>
                 <div class="text-pink-400">🤔</div>
               </div>
             </div>
@@ -319,37 +223,24 @@
       <div class="bg-white/90 backdrop-blur-md border-t border-pink-200/50 p-3 sm:p-6 shadow-lg">
         <div class="max-w-4xl mx-auto">
           <!-- Error Message -->
-          <div
-            v-if="error"
-            class="mb-3 sm:mb-4 p-3 sm:p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl shadow-sm"
-          >
+          <div v-if="error"
+            class="mb-3 sm:mb-4 p-3 sm:p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl shadow-sm">
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <svg
-                  class="w-4 h-4 sm:w-5 sm:h-5 text-red-400 mr-2 sm:mr-3"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fill-rule="evenodd"
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-red-400 mr-2 sm:mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clip-rule="evenodd"
-                  ></path>
+                    clip-rule="evenodd"></path>
                 </svg>
               </div>
               <div class="flex-1">
                 <span class="text-red-700 text-xs sm:text-sm font-medium">{{ error }}</span>
               </div>
-              <button
-                @click="error = ''"
-                class="ml-2 sm:ml-4 text-red-400 hover:text-red-600 transition-colors"
-              >
+              <button @click="error = ''" class="ml-2 sm:ml-4 text-red-400 hover:text-red-600 transition-colors">
                 <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
+                  <path fill-rule="evenodd"
                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clip-rule="evenodd"
-                  ></path>
+                    clip-rule="evenodd"></path>
                 </svg>
               </button>
             </div>
@@ -357,38 +248,21 @@
 
           <div class="flex space-x-2 sm:space-x-4">
             <div class="flex-1 relative">
-              <textarea
-                v-model="currentMessage"
-                @keydown.enter.prevent="handleSendMessage"
-                @input="error = ''"
-                :disabled="!chatStore.canSendMessage || chatStore.isLoading"
-                :placeholder="getPlaceholder()"
+              <textarea v-model="currentMessage" @keydown.enter.prevent="handleSendMessage" @input="error = ''"
+                :disabled="!chatStore.canSendMessage || chatStore.isLoading" :placeholder="getPlaceholder()"
                 class="w-full p-3 sm:p-4 pr-8 sm:pr-12 border-2 border-pink-200/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent resize-none bg-white/80 backdrop-blur-sm shadow-sm transition-all duration-200 hover:shadow-md text-sm sm:text-base"
-                :rows="2"
-              ></textarea>
+                :rows="2"></textarea>
               <!-- Character count or status indicator -->
               <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-xs text-gray-400">
                 <span v-if="currentMessage.length > 0">{{ currentMessage.length }}</span>
                 <span v-else class="text-pink-400">💬</span>
               </div>
             </div>
-            <button
-              @click="handleSendMessage"
-              :disabled="!canSend"
-              class="px-3 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-2xl hover:from-pink-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-pink-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105 shadow-md disabled:hover:scale-100 flex-shrink-0"
-            >
-              <svg
-                class="w-5 h-5 sm:w-6 sm:h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                ></path>
+            <button @click="handleSendMessage" :disabled="!canSend"
+              class="px-3 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-2xl hover:from-pink-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-pink-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105 shadow-md disabled:hover:scale-100 flex-shrink-0">
+              <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
               </svg>
             </button>
           </div>
@@ -396,11 +270,8 @@
       </div>
 
       <!-- Prompt Limit Modal -->
-      <PromptLimitModal
-        :show="showPromptLimitModal"
-        @close="showPromptLimitModal = false"
-        @sign-up="$router.push('/auth')"
-      />
+      <PromptLimitModal :show="showPromptLimitModal" @close="showPromptLimitModal = false"
+        @sign-up="$router.push('/auth')" />
     </div>
   </div>
 </template>
