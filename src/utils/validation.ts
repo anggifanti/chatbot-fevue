@@ -3,7 +3,20 @@ export const validateEmail = (email: string): boolean => {
   return emailRegex.test(email)
 }
 
-export const validatePassword = (password: string): { isValid: boolean; message: string } => {
+export const validatePassword = (password: string): boolean => {
+  return password.length >= 8
+}
+
+export const validateRequired = (value: string): boolean => {
+  return value.trim().length > 0
+}
+
+export const validateName = (name: string): boolean => {
+  return name.trim().length >= 2
+}
+
+// Legacy functions for backward compatibility
+export const validatePasswordComplex = (password: string): { isValid: boolean; message: string } => {
   if (password.length < 8) {
     return {
       isValid: false,
@@ -17,7 +30,7 @@ export const validatePassword = (password: string): { isValid: boolean; message:
   }
 }
 
-export const validateName = (name: string): { isValid: boolean; message: string } => {
+export const validateNameComplex = (name: string): { isValid: boolean; message: string } => {
   if (name.trim().length < 2) {
     return {
       isValid: false,
