@@ -18,20 +18,35 @@ export const useAuthStore = defineStore('auth', () => {
         password,
       })
 
-      token.value = response.data.token
-      user.value = response.data.user
+      if (response.data && response.data.token && response.data.user) {
+        token.value = response.data.token
+        user.value = response.data.user
 
-      localStorage.setItem('token', token.value)
-      api.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
+        localStorage.setItem('token', response.data.token)
+        api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
 
-      // Reset guest count when user authenticates
-      const { useChatStore } = await import('./chat')
-      const chatStore = useChatStore()
-      chatStore.resetGuestCount()
+        // Reset guest count when user authenticates
+        try {
+          const { useChatStore } = await import('./chat')
+          const chatStore = useChatStore()
+          chatStore.resetGuestCount()
+        } catch (error) {
+          console.warn('Could not reset guest count:', error)
+        }
 
-      return true
-    } catch (error) {
+        return true
+      } else {
+        throw new Error('Invalid response from server')
+      }
+    } catch (error: any) {
       console.error('Login failed:', error)
+      
+      // Clear any stored token on login failure
+      token.value = null
+      user.value = null
+      localStorage.removeItem('token')
+      delete api.defaults.headers.common['Authorization']
+      
       return false
     } finally {
       isLoading.value = false
@@ -56,8 +71,8 @@ export const useAuthStore = defineStore('auth', () => {
       token.value = response.data.token
       user.value = response.data.user
 
-      localStorage.setItem('token', token.value)
-      api.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
+      localStorage.setItem('token', response.data.token)
+      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
 
       // Reset guest count when user registers
       const { useChatStore } = await import('./chat')
@@ -89,16 +104,29 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const checkAuth = async () => {
-    if (!token.value) return false
+    if (!token.value) {
+      // No token available, ensure user is cleared
+      user.value = null
+      return false
+    }
 
     try {
+      // Set the token in headers before making the request
       api.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
       const response = await api.get<{ user: User }>('/user')
+      
+      // Successfully got user data
       user.value = response.data.user
       return true
-    } catch (error) {
+    } catch (error: any) {
       console.error('Auth check failed:', error)
-      logout()
+      
+      // Clear all auth state on failure
+      token.value = null
+      user.value = null
+      localStorage.removeItem('token')
+      delete api.defaults.headers.common['Authorization']
+      
       return false
     }
   }
