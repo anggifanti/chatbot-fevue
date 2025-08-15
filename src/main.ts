@@ -62,10 +62,12 @@ import {
   MdExittoapp,
   MdInsights,
   MdEmojievents,
+  MdWarning,
   // New icons for AdminView
   GiLipstick,
   MdForum,
-  MdBrush
+  MdBrush,
+  GiButterfly
 } from 'oh-vue-icons/icons'
 
 // Add all icons to the library
@@ -81,9 +83,9 @@ addIcons(
   MdChevronright, MdKeyboardarrowup, MdKeyboardarrowdown,
   MdKeyboardarrowleft, MdKeyboardarrowright, MdSchedule,
   MdEmail, MdRefresh, MdSettings, MdNotifications, MdExittoapp,
-  MdInsights, MdEmojievents,
-  // New icons for AdminView
-  GiLipstick, MdForum, MdBrush
+  MdInsights, MdEmojievents, MdWarning,
+  // New icons for AdminView and ProfileView
+  GiLipstick, MdForum, MdBrush, GiButterfly
 )
 
 const app = createApp(App)

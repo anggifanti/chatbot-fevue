@@ -25,7 +25,7 @@
                 ></path>
               </svg>
             </button>
-            <div class="text-lg sm:text-2xl">⚙️</div>
+            <VIcon name="md-settings" class="text-lg sm:text-2xl text-purple-600" />
             <div>
               <h1
                 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
@@ -54,7 +54,7 @@
           </h2>
 
           <div
-            class="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6"
+            class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6"
           >
             <div class="relative">
               <img
@@ -62,7 +62,7 @@
                 :alt="user?.name"
                 class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-gradient-to-r from-pink-400 to-purple-500 shadow-lg"
               />
-              <button
+              <!-- <button
                 @click="triggerFileUpload"
                 class="absolute bottom-0 right-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full p-2 hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg"
               >
@@ -74,7 +74,7 @@
                     d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                   ></path>
                 </svg>
-              </button>
+              </button> -->
             </div>
 
             <div class="flex-1 flex flex-col space-y-2">
@@ -97,7 +97,7 @@
           class="bg-white/80 backdrop-blur-sm shadow-xl rounded-xl p-4 sm:p-6 border border-pink-100"
         >
           <h2 class="text-base sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-            <span class="text-lg sm:text-xl mr-2">🦋</span>
+            <VIcon name="gi-butterfly" class="text-lg sm:text-xl mr-2 text-pink-500" />
             Informasi Profil
           </h2>
 
@@ -269,7 +269,7 @@
         <!-- Danger Zone -->
         <div class="bg-red-50 border border-red-200 shadow-xl rounded-xl p-4 sm:p-6">
           <h2 class="text-base sm:text-lg font-bold text-red-900 mb-3 sm:mb-4 flex items-center">
-            <span class="text-lg sm:text-xl mr-2">⚠️</span>
+            <VIcon name="md-warning" class="text-lg sm:text-xl mr-2 text-red-600" />
             Zona Berbahaya
           </h2>
 
@@ -520,9 +520,9 @@ const getDefaultAvatar = () => {
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.value?.name || 'User')}&color=7F9CF5&background=EBF4FF`
 }
 
-const triggerFileUpload = () => {
+/* const triggerFileUpload = () => {
   fileInput.value?.click()
-}
+} */
 
 const handleAvatarUpload = async (event: Event) => {
   const target = event.target as HTMLInputElement

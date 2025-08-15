@@ -212,7 +212,7 @@
       </header>
 
       <!-- Chat Messages -->
-      <div class="flex-1 overflow-y-auto p-3 sm:p-6">
+      <div class="flex justify-center items-center flex-1 overflow-y-auto p-3 sm:p-6">
         <div class="max-w-4xl mx-auto space-y-4">
           <!-- Welcome Message -->
           <div v-if="chatStore.messages.length === 0" class="text-center py-4 sm:py-8">
@@ -237,21 +237,7 @@
                   tersisa
                 </span>
               </div>
-              </div>
-                <div class="text-xl sm:text-2xl mb-2">💄</div>
-                <div class="text-xs sm:text-sm font-medium text-purple-800">Makeup Tutorial</div>
-                <div class="text-xs text-purple-600 mt-1">Panduan makeup step-by-step</div>
-              <!--
-              <div
-                class="p-3 sm:p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl text-center hover:scale-105 transition-transform duration-200 cursor-pointer sm:col-span-2 lg:col-span-1"
-                @click="currentMessage = 'Produk skincare apa yang bagus untuk anti-aging?'"
-              >
-                <div class="text-xl sm:text-2xl mb-2">✨</div>
-                <div class="text-xs sm:text-sm font-medium text-blue-800">Produk Review</div>
-                <div class="text-xs text-blue-600 mt-1">Rekomendasi produk terbaik</div>
-              </div>
             </div>
-              -->
           </div>
 
           <!-- Messages -->
@@ -286,8 +272,8 @@
                   {{ formatTime(message.timestamp) }}
                 </div>
                 
-                <!-- Rating button for AI messages -->
-                <div v-if="message.sender === 'bot'" class="ml-2">
+                <!-- Rating button for AI messages (only for authenticated users) -->
+                <div v-if="message.sender === 'bot' && authStore.isAuthenticated" class="ml-2">
                   <RatingButton
                     variant="ghost"
                     :session-id="getSessionId()"
@@ -415,8 +401,8 @@
         @sign-up="$router.push('/auth')"
       />
       
-      <!-- Floating App Rating Button -->
-      <div class="fixed bottom-6 right-6 z-10">
+      <!-- Floating App Rating Button (only for authenticated users) -->
+      <div v-if="authStore.isAuthenticated" class="fixed bottom-6 right-6 z-10">
         <RatingButton
           type="app"
           variant="primary"
