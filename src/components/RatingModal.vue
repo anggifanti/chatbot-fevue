@@ -63,6 +63,11 @@
           {{ error }}
         </div>
 
+        <!-- Success Message -->
+        <div v-if="isSuccess" class="mb-4 p-3 bg-green-50 text-green-700 rounded-lg text-sm">
+          Terima kasih! Rating Anda telah berhasil dikirim.
+        </div>
+
         <!-- Action Buttons -->
         <div class="flex space-x-3">
           <button
@@ -119,6 +124,7 @@ const rating = ref(0)
 const feedback = ref('')
 const isSubmitting = ref(false)
 const error = ref('')
+const isSuccess = ref(false)
 
 // Computed properties
 const title = computed(() => 'Nilai Pengalaman Anda')
@@ -135,6 +141,7 @@ const resetForm = () => {
   rating.value = 0
   feedback.value = ''
   error.value = ''
+  isSuccess.value = false
 }
 
 const submitRating = async () => {
@@ -142,6 +149,7 @@ const submitRating = async () => {
 
   isSubmitting.value = true
   error.value = ''
+  isSuccess.value = false
 
   try {
     const ratingData: RatingData = {
@@ -156,8 +164,15 @@ const submitRating = async () => {
 
     await ratingService.submitRating(ratingData)
     
+    // Show success message
+    isSuccess.value = true
     emit('success')
-    closeModal()
+    
+    // Add a small delay to show success feedback before closing
+    setTimeout(() => {
+      closeModal()
+    }, 1500)
+    
   } catch (err: any) {
     console.error('Failed to submit rating:', err)
     error.value = err.response?.data?.message || 'Gagal mengirim rating. Silakan coba lagi.'
