@@ -1,9 +1,7 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-100">
     <!-- Header -->
-    <header
-      class="bg-white/80 backdrop-blur-sm shadow-lg border-b border-pink-200/50 px-3 sm:px-6 py-3 sm:py-4"
-    >
+    <header class="bg-white/80 backdrop-blur-sm shadow-lg border-b border-pink-200/50 px-3 sm:px-6 py-3 sm:py-4">
       <div class="flex justify-between items-center">
         <div class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
           <div
@@ -13,44 +11,35 @@
           </div>
           <div class="min-w-0">
             <h1
-              class="text-lg sm:text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent truncate"
-            >
+              class="text-lg sm:text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent truncate">
               <span>Dashboard</span>
             </h1>
           </div>
         </div>
         <div class="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
           <div
-            class="hidden sm:flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-pink-100 to-purple-100 rounded-lg"
-          >
+            class="hidden sm:flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-pink-100 to-purple-100 rounded-lg">
             <div
-              class="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center"
-            >
+              class="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center">
               <span class="text-white text-xs sm:text-sm font-medium">{{
                 authStore.user?.name?.charAt(0).toUpperCase()
-              }}</span>
+                }}</span>
             </div>
             <span class="text-sm font-medium text-gray-700 hidden lg:inline">{{
               authStore.user?.name
-            }}</span>
+              }}</span>
           </div>
-          <button
-            @click="$router.push('/profile')"
-            class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-purple-700 bg-white/70 border border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
-          >
+          <button @click="$router.push('/profile')"
+            class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-purple-700 bg-white/70 border border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200">
             <span class="hidden sm:inline">Profil</span>
             <VIcon name="md-person" class="sm:hidden text-base" />
           </button>
-          <button
-            @click="$router.push('/')"
-            class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white/70 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-          >
+          <button @click="$router.push('/')"
+            class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white/70 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
             <span class="hidden sm:inline">Kembali ke Chat</span>
           </button>
-          <button
-            @click="handleLogout"
-            class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-red-500 to-pink-600 rounded-lg hover:from-red-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 shadow-lg"
-          >
+          <button @click="handleLogout"
+            class="px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-red-500 to-pink-600 rounded-lg hover:from-red-600 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 shadow-lg">
             <span class="hidden sm:inline">Keluar</span>
             <VIcon name="md-exittoapp" class="sm:hidden text-base" />
           </button>
@@ -77,8 +66,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <!-- Total Messages Card -->
           <div
-            class="group relative bg-white/70 backdrop-blur-sm overflow-hidden shadow-xl rounded-2xl border border-pink-200/50 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
-          >
+            class="group relative bg-white/70 backdrop-blur-sm overflow-hidden shadow-xl rounded-2xl border border-pink-200/50 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
             <div class="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-purple-500/5"></div>
             <div class="relative p-4 sm:p-6">
               <div class="flex items-center justify-between">
@@ -110,8 +98,7 @@
 
           <!-- Total Sessions Card -->
           <div
-            class="group relative bg-white/70 backdrop-blur-sm overflow-hidden shadow-xl rounded-2xl border border-purple-200/50 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
-          >
+            class="group relative bg-white/70 backdrop-blur-sm overflow-hidden shadow-xl rounded-2xl border border-purple-200/50 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
             <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-indigo-500/5"></div>
             <div class="relative p-6">
               <div class="flex items-center justify-between">
@@ -143,8 +130,7 @@
 
           <!-- Today's Messages Card -->
           <div
-            class="group relative bg-white/70 backdrop-blur-sm overflow-hidden shadow-xl rounded-2xl border border-indigo-200/50 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
-          >
+            class="group relative bg-white/70 backdrop-blur-sm overflow-hidden shadow-xl rounded-2xl border border-indigo-200/50 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
             <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-pink-500/5"></div>
             <div class="relative p-6">
               <div class="flex items-center justify-between">
@@ -176,17 +162,13 @@
         </div>
 
         <!-- Chart -->
-        <div
-          class="bg-white/70 backdrop-blur-sm shadow-2xl rounded-2xl border border-pink-200/50 overflow-hidden"
-        >
+        <div class="bg-white/70 backdrop-blur-sm shadow-2xl rounded-2xl border border-pink-200/50 overflow-hidden">
           <div
-            class="bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-indigo-500/10 px-6 py-4 border-b border-pink-200/30"
-          >
+            class="bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-indigo-500/10 px-6 py-4 border-b border-pink-200/30">
             <div class="flex items-center justify-between">
               <div>
                 <h3
-                  class="text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent"
-                >
+                  class="text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
                   Analitik Perjalanan Kecantikan
                 </h3>
                 <p class="text-sm text-gray-500 mt-1">
@@ -195,14 +177,8 @@
               </div>
               <div class="flex items-center space-x-2">
                 <div class="w-3 h-3 bg-pink-400 rounded-full animate-pulse"></div>
-                <div
-                  class="w-3 h-3 bg-purple-400 rounded-full animate-pulse"
-                  style="animation-delay: 0.2s"
-                ></div>
-                <div
-                  class="w-3 h-3 bg-indigo-400 rounded-full animate-pulse"
-                  style="animation-delay: 0.4s"
-                ></div>
+                <div class="w-3 h-3 bg-purple-400 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+                <div class="w-3 h-3 bg-indigo-400 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
               </div>
             </div>
           </div>
