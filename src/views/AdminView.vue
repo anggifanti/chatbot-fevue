@@ -106,7 +106,7 @@
                 <div class="ml-3 sm:ml-5 w-0 flex-1">
                   <dl>
                     <dt class="text-xs sm:text-sm font-medium text-purple-100 truncate">
-                      Konsultasi
+                      Percakapan
                     </dt>
                     <dd class="text-lg sm:text-2xl font-bold text-white">
                       {{ dashboardStats?.total_conversations || 0 }}
@@ -130,7 +130,7 @@
                 <div class="ml-3 sm:ml-5 w-0 flex-1">
                   <dl>
                     <dt class="text-xs sm:text-sm font-medium text-orange-100 truncate">
-                      Tips Kecantikan Dibagikan
+                      Jumlah Pesan 
                     </dt>
                     <dd class="text-lg sm:text-2xl font-bold text-white">
                       {{ dashboardStats?.total_messages || 0 }}
@@ -163,7 +163,7 @@
                 </div>
                 <div>
                   <div class="bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-                    Aktivitas Konsultasi Kecantikan
+                    Aktivitas percakapan
                   </div>
                   <div class="text-xs sm:text-sm text-gray-500 font-normal">7 Hari Terakhir</div>
                 </div>
@@ -589,7 +589,7 @@
                           <div class="flex items-center space-x-2">
                             <VIcon name="md-chat" class="text-xs text-purple-500" />
                             <span class="text-sm font-medium text-gray-900"
-                              >{{ user.conversations_count || 0 }} konsultasi</span
+                              >{{ user.conversations_count || 0 }} percakapan </span
                             >
                           </div>
                           <div class="flex items-center space-x-2">
@@ -824,7 +824,7 @@
                 <div>
                   <h3
                     class="text-lg sm:text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-                    Aktivitas Konsultasi Kecantikan
+                    Aktivitas Percakapan 
                   </h3>
                   <p class="text-xs sm:text-sm text-gray-500">
                     Analisis mendalam aktivitas platform
@@ -1605,7 +1605,7 @@ const tabs = [
   { id: 'dashboard', name: 'Dashboard', icon: 'md-assessment' },
   { id: 'users', name: 'Member', icon: 'md-group' },
   { id: 'chat-stats', name: 'Analitik Kecantikan', icon: 'md-insights' },
-  { id: 'ratings', name: 'Rating & Feedback', icon: 'md-star' },
+  { id: 'ratings', name: 'Rating', icon: 'md-star' },
 ]
 
 // Computed
