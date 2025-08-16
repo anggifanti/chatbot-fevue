@@ -38,26 +38,57 @@
           <div
             class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6"
           >
-            <div class="relative">
+            <div 
+              class="relative cursor-pointer group"
+              @click="triggerFileUpload"
+              @dragover.prevent="onDragOver"
+              @dragleave.prevent="onDragLeave"
+              @drop.prevent="onDrop"
+              :class="{ 'ring-2 ring-pink-500 ring-opacity-50': isDragOver }"
+            >
               <img
-                :src="user?.avatar || getDefaultAvatar()"
+                :src="user?.avatar_url || getDefaultAvatar()"
                 :alt="user?.name"
-                class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-gradient-to-r from-pink-400 to-purple-500 shadow-lg"
+                class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-gradient-to-r from-pink-400 to-purple-500 shadow-lg transition-all duration-200"
+                :class="{ 'opacity-50': uploadingAvatar, 'group-hover:opacity-75': !uploadingAvatar }"
               />
-              <!-- <button
-                @click="triggerFileUpload"
-                class="absolute bottom-0 right-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full p-2 hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
-                  </path>
+              
+              <!-- Upload overlay when uploading -->
+              <div v-if="uploadingAvatar" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-full">
+                <svg class="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-              </button> -->
+              </div>
+              
+              <!-- Hover overlay -->
+              <div v-else class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-full transition-all duration-200">
+                <VIcon name="md-photo-camera" class="text-white opacity-0 group-hover:opacity-100 transition-all duration-200" />
+              </div>
+              
+              <button
+                @click.stop="triggerFileUpload"
+                class="absolute bottom-0 right-0 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full p-2 hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg"
+                :disabled="uploadingAvatar"
+                :class="{ 'opacity-50 cursor-not-allowed': uploadingAvatar }"
+              >
+                <VIcon v-if="!uploadingAvatar" name="md-edit" class="text-sm" />
+                <svg v-else class="animate-spin w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </button>
             </div>
 
             <div class="flex-1 flex flex-col space-y-2">
               <h3 class="text-sm sm:text-base font-medium text-gray-900">{{ user?.name }}</h3>
               <p class="text-xs sm:text-sm text-gray-500">{{ user?.email }}</p>
+              <p class="text-xs text-gray-400 mt-1">
+                Klik atau seret foto untuk mengubah profil
+              </p>
+              <p class="text-xs text-gray-400">
+                Format: JPG, PNG, GIF, WebP (maks. 2MB)
+              </p>
             </div>
           </div>
 
@@ -308,6 +339,8 @@ const user = ref<UserProfile | null>(null)
 const profileLoading = ref(false)
 const passwordLoading = ref(false)
 const deleteLoading = ref(false)
+const uploadingAvatar = ref(false)
+const isDragOver = ref(false)
 const showDeleteModal = ref(false)
 const fileInput = ref<HTMLInputElement>()
 const message = ref<{ type: 'success' | 'error'; text: string } | null>(null)
@@ -354,27 +387,111 @@ const getDefaultAvatar = () => {
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.value?.name || 'User')}&color=7F9CF5&background=EBF4FF`
 }
 
-/* const triggerFileUpload = () => {
+const triggerFileUpload = () => {
   fileInput.value?.click()
-} */
+}
 
 const handleAvatarUpload = async (event: Event) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
 
-  if (!file) return
+  console.log('🖼️ Avatar upload started:', { file, hasFile: !!file })
+
+  if (!file) {
+    console.warn('❌ No file selected')
+    return
+  }
+
+  console.log('📁 File details:', {
+    name: file.name,
+    size: file.size,
+    type: file.type,
+    lastModified: file.lastModified
+  })
+
+  // File validation
+  const maxSize = 2 * 1024 * 1024 // 2MB
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+
+  if (file.size > maxSize) {
+    showMessage('error', 'Ukuran file terlalu besar. Maksimal 2MB.')
+    target.value = '' // Reset input
+    return
+  }
+
+  if (!allowedTypes.includes(file.type)) {
+    showMessage('error', 'Format file tidak didukung. Gunakan JPG, PNG, GIF, atau WebP.')
+    target.value = '' // Reset input
+    return
+  }
+
+  // Create preview
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    if (user.value && e.target?.result) {
+      // Temporarily show preview
+      ;(user.value as any).avatar_url = e.target.result as string
+    }
+  }
+  reader.readAsDataURL(file)
 
   try {
+    uploadingAvatar.value = true
+    console.log('📤 Starting upload to backend...')
+    
     const response = await userService.updateAvatar(file)
+    console.log('✅ Upload successful:', response)
+    
     user.value = response
     authStore.user = {
       ...response,
       updated_at: response.updated_at ?? '',
     }
-    showMessage('success', 'Avatar updated successfully!')
+    
+    showMessage('success', 'Foto profil berhasil diperbarui!')
+    
+    // Reset the input to allow selecting the same file again if needed
+    target.value = ''
   } catch (error: any) {
-    console.error('Avatar upload error:', error)
-    showMessage('error', error.response?.data?.message || 'Failed to update avatar')
+    console.error('❌ Avatar upload error:', error)
+    showMessage('error', error.response?.data?.message || 'Gagal memperbarui foto profil')
+    target.value = '' // Reset input on error
+    
+    // Revert to original avatar on error
+    await getCurrentUser()
+  } finally {
+    uploadingAvatar.value = false
+  }
+}
+
+// Drag and drop handlers
+const onDragOver = (event: DragEvent) => {
+  event.preventDefault()
+  isDragOver.value = true
+}
+
+const onDragLeave = (event: DragEvent) => {
+  event.preventDefault()
+  isDragOver.value = false
+}
+
+const onDrop = (event: DragEvent) => {
+  event.preventDefault()
+  isDragOver.value = false
+  
+  const files = event.dataTransfer?.files
+  if (files && files.length > 0) {
+    const file = files[0]
+    console.log('🎯 File dropped:', { file, name: file.name, type: file.type })
+    
+    // Create a mock event to reuse handleAvatarUpload logic
+    const mockEvent = {
+      target: {
+        files: [file],
+        value: ''
+      }
+    } as any
+    handleAvatarUpload(mockEvent)
   }
 }
 

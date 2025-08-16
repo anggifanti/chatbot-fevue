@@ -100,8 +100,19 @@ class UserService {
    * Update user avatar
    */
   async updateAvatar(file: File): Promise<User> {
+    console.log('📤 UserService.updateAvatar called with:', {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type
+    })
+    
     const formData = new FormData()
     formData.append('avatar', file)
+    
+    console.log('📦 FormData created:', {
+      hasAvatar: formData.has('avatar'),
+      avatarFile: formData.get('avatar')
+    })
     
     const response = await apiService.post('/user/avatar', formData)
     
