@@ -1570,6 +1570,7 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { api } from '@/services/api'
 import { ratingService } from '@/services/rating'
+import type { ChatStats } from '@/types'
 import * as XLSX from 'xlsx'
 import { jsPDF } from 'jspdf'
 import 'jspdf-autotable'
@@ -1583,7 +1584,7 @@ const dashboardStats = ref<any>(null)
 const users = ref<any[]>([])
 const usersPagination = ref<any>(null)
 const userSearch = ref('')
-const chatStats = ref<any>(null)
+const chatStats = ref<ChatStats | null>(null)
 const selectedUser = ref<any>(null)
 const userConversations = ref<any[]>([])
 const loading = ref(false)
@@ -1643,6 +1644,10 @@ const loadUsers = async (page = 1) => {
     }
 
     const response = await api.get(`/admin/users?${params}`)
+    console.log('🔍 Users API Response:', response.data)
+    console.log('👥 Users data:', response.data.data)
+    console.log('📊 Sample user:', response.data.data?.[0])
+    
     users.value = response.data.data || []
     usersPagination.value = response.data.pagination || null
   } catch (error) {
@@ -2007,14 +2012,14 @@ const formatDateShort = (dateString: string) => {
   })
 }
 
-const formatPeakHour = (hour: string) => {
-  if (!hour) return 'Belum tersedia'
-  const hourNum = parseInt(hour)
-  if (hourNum >= 0 && hourNum < 6) return `${hour}:00 (Dini hari)`
-  if (hourNum >= 6 && hourNum < 12) return `${hour}:00 (Pagi)`
-  if (hourNum >= 12 && hourNum < 18) return `${hour}:00 (Siang)`
-  if (hourNum >= 18 && hourNum < 24) return `${hour}:00 (Malam)`
-  return `${hour}:00`
+const formatPeakHour = (hour: number | string) => {
+  if (hour === null || hour === undefined) return 'Belum tersedia'
+  const hourNum = typeof hour === 'string' ? parseInt(hour) : hour
+  if (hourNum >= 0 && hourNum < 6) return `${hourNum}:00 (Dini hari)`
+  if (hourNum >= 6 && hourNum < 12) return `${hourNum}:00 (Pagi)`
+  if (hourNum >= 12 && hourNum < 18) return `${hourNum}:00 (Siang)`
+  if (hourNum >= 18 && hourNum < 24) return `${hourNum}:00 (Malam)`
+  return `${hourNum}:00`
 }
 
 const getDailyAverage = () => {

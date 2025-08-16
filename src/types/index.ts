@@ -10,6 +10,7 @@ export interface User {
   created_at: string
   updated_at: string
   conversations_count?: number
+  messages_count?: number
 }
 
 export interface AuthUser extends User {
@@ -171,4 +172,26 @@ export interface ApiResponse<T = any> {
   }
   stats?: T
   user?: User
+}
+
+export interface ChatStats {
+  total_messages: number
+  total_conversations: number
+  total_users: number
+  total_messages_period: number
+  total_conversations_period: number
+  average_messages_per_conversation: number
+  messages_per_day: Array<{
+    date: string
+    count: number
+  }>
+  top_active_users: Array<{
+    id: number
+    name: string
+    email: string
+    messages_count: number
+    is_premium: boolean
+  }>
+  peak_hour: number
+  peak_hour_count: number
 }
